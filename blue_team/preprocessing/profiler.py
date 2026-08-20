@@ -70,23 +70,32 @@ def _is_binary_series(series: pd.Series) -> bool:
 
 
 def _infer_target_candidates(df: pd.DataFrame) -> list[dict[str, Any]]:
+    """Identify conservative target-column candidates."""
     candidates: list[dict[str, Any]] = []
+
     for column in df.columns:
         series = df[column]
         reasons: list[str] = []
+
         if _match_patterns(column, TARGET_NAME_PATTERNS):
             reasons.append("name_pattern")
+
         if _is_binary_series(series):
             reasons.append("binary_values")
-        if reasons:
-            candidates.append(
-                {
-                    "column": column,
-                    "reasons": reasons,
-                    "unique_values": int(series.nunique(dropna=True)),
-                    "dtype": str(series.dtype),
-                }
-            )
+
+        # A binary column alone is not enough to call something a target.
+        if "name_pattern" not in reasons:
+            continue
+
+        candidates.append(
+            {
+                "column": column,
+                "reasons": reasons,
+                "unique_values": int(series.nunique(dropna=True)),
+                "dtype": str(series.dtype),
+            }
+        )
+
     return candidates
 
 
