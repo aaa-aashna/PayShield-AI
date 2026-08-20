@@ -1,0 +1,17 @@
+# Core data and numerics
+numpy>=1.26.0,<3.0
+pandas>=2.1.0,<3.0
+
+# Visualization (research and baseline analysis)
+matplotlib>=3.8.0,<4.0
+seaborn>=0.13.0,<1.0
+
+# Machine learning (baseline models and evaluation)
+scikit-learn>=1.4.0,<2.0
+
+# Configuration and utilities
+pyyaml>=6.0,<7.0
+python-dotenv>=1.0.0,<2.0
+
+# Testing
+pytest>=8.0.0,<9.0
