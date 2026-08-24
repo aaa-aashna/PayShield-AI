@@ -1,11 +1,5 @@
 # PayShield AI: Adaptive ML-Driven Payment Security & Fraud Intelligence Platform
 
-[![Mastercard Challenge 2026](https://img.shields.io/badge/Challenge-Mastercard%20Innovation%202026-eb001b.svg)](https://mastercard.com)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688.svg)](https://fastapi.tiangolo.com)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.32+-FF4B4B.svg)](https://streamlit.io)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
 > **PayShield AI** is an end-to-end, machine-learning-driven payment security platform that replaces static, easily-evaded fraud rules with **customer behavioral profiling**, **terminal intelligence**, **bipartite graph relationship analytics**, **unsupervised anomaly isolation**, **hybrid risk fusion**, and **closed-loop adversarial Red Team attack simulations**.
 
 ---
