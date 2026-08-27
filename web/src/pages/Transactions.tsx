@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search } from 'lucide-react';
+import { Search, Filter, ArrowRight, RefreshCw } from 'lucide-react';
 import { RiskBadge } from '../components/common/RiskBadge';
+import { LoadingState } from '../components/common/LoadingState';
+import { EmptyState } from '../components/common/EmptyState';
 import { api } from '../services/api';
 import { TransactionRecord } from '../types';
 
@@ -34,56 +36,77 @@ export const Transactions: React.FC = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-12 space-y-10">
-      {/* Header */}
+    <div className="max-w-6xl mx-auto px-6 py-10 space-y-8">
+      {/* 1. Header */}
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
           <div className="space-y-1">
             <div className="text-[11px] font-mono uppercase tracking-widest text-ink-muted">
-              Activity
+              Live Feed
             </div>
-            <h1 className="text-4xl font-semibold tracking-tight text-ink">
-              Transactions
+            <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-ink">
+              Transactions stream
             </h1>
             <p className="text-sm text-ink-secondary max-w-xl font-sans pt-1">
-              Chronological payment stream evaluated through the multi-tier model pipeline.
+              Chronological payment authorizations evaluated across all 52 behavioral and graph features.
             </p>
           </div>
 
-          <div className="flex items-center gap-3 font-mono text-xs">
-            <form onSubmit={handleSearchSubmit} className="relative">
-              <Search className="w-3 h-3 absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-              <input
-                type="text"
-                placeholder="Search ID, customer, terminal..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="bg-surface border border-surface-border rounded-none pl-8 pr-3 py-1.5 text-ink focus:border-ink outline-none w-52"
-              />
-            </form>
+          <div className="flex items-center gap-2 font-mono text-xs text-ink-muted">
+            <span>Stream source:</span>
+            <span className="font-semibold text-ink bg-surface border border-surface-border px-2.5 py-1">
+              1.75M Production Dataset
+            </span>
+          </div>
+        </div>
 
-            <select
-              value={filterLevel}
-              onChange={(e) => setFilterLevel(e.target.value)}
-              className="bg-surface border border-surface-border rounded-none px-3 py-1.5 text-ink focus:border-ink outline-none"
+        {/* 2. Search & Filter Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-4 p-3 bg-surface border border-surface-border font-mono text-xs">
+          <form onSubmit={handleSearchSubmit} className="relative flex-1 min-w-[240px] max-w-md">
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
+            <input
+              type="text"
+              placeholder="Search transaction ID, customer, terminal..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="bg-background border border-surface-border pl-9 pr-3 py-1.5 text-ink focus:border-ink outline-none w-full text-xs"
+            />
+          </form>
+
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <span className="text-ink-muted uppercase text-[11px]">Risk filter:</span>
+              <select
+                value={filterLevel}
+                onChange={(e) => setFilterLevel(e.target.value)}
+                className="bg-background border border-surface-border px-2.5 py-1.5 text-ink focus:border-ink outline-none"
+              >
+                <option value="ALL">All risk levels</option>
+                <option value="CRITICAL">Critical only</option>
+                <option value="HIGH">High only</option>
+                <option value="MEDIUM">Medium only</option>
+                <option value="LOW">Low only</option>
+              </select>
+            </div>
+
+            <button
+              onClick={fetchTransactions}
+              className="p-1.5 bg-background border border-surface-border text-ink-secondary hover:text-ink hover:border-ink transition"
+              title="Refresh stream"
             >
-              <option value="ALL">All levels</option>
-              <option value="CRITICAL">Critical</option>
-              <option value="HIGH">High</option>
-              <option value="MEDIUM">Medium</option>
-              <option value="LOW">Low</option>
-            </select>
+              <RefreshCw className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Stream Table */}
-      <div className="overflow-x-auto border-t border-surface-border pt-2">
+      {/* 3. Transaction Stream Table */}
+      <div className="overflow-x-auto bg-surface border border-surface-border">
         {loading ? (
-          <div className="py-12 text-center text-xs font-mono text-ink-muted">Loading transactions...</div>
+          <LoadingState message="Loading payment transaction stream..." className="py-16" />
         ) : transactions.length > 0 ? (
           <table className="w-full text-left text-xs font-mono">
-            <thead className="text-[11px] uppercase text-ink-muted border-b border-surface-border">
+            <thead className="text-[11px] uppercase text-ink-muted border-b border-surface-border bg-background">
               <tr>
                 <th className="py-3 px-3">Transaction</th>
                 <th className="py-3 px-3">Timestamp</th>
@@ -91,7 +114,7 @@ export const Transactions: React.FC = () => {
                 <th className="py-3 px-3">Terminal</th>
                 <th className="py-3 px-3 text-right">Amount</th>
                 <th className="py-3 px-3 text-center">Fraud probability</th>
-                <th className="py-3 px-3 text-center">Anomaly</th>
+                <th className="py-3 px-3 text-center">Anomaly score</th>
                 <th className="py-3 px-3">Risk level</th>
                 <th className="py-3 px-3">Decision</th>
                 <th className="py-3 px-3 text-right">Action</th>
@@ -102,7 +125,7 @@ export const Transactions: React.FC = () => {
                 <tr
                   key={tx.transaction_id}
                   onClick={() => navigate(`/transactions/${tx.transaction_id}`)}
-                  className="hover:bg-neutral-100/70 transition cursor-pointer"
+                  className="hover:bg-neutral-50 transition cursor-pointer"
                 >
                   <td className="py-3 px-3 font-semibold text-ink">{tx.transaction_id}</td>
                   <td className="py-3 px-3 text-ink-secondary">
@@ -126,16 +149,23 @@ export const Transactions: React.FC = () => {
                     <RiskBadge decision={tx.decision} size="sm" />
                   </td>
                   <td className="py-3 px-3 text-right">
-                    <span className="text-ink hover:underline">Inspect →</span>
+                    <span className="text-ink hover:underline font-semibold">Inspect →</span>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         ) : (
-          <div className="py-12 text-center text-xs font-mono text-ink-muted">
-            No transactions found matching filter.
-          </div>
+          <EmptyState
+            title="No Transactions Found"
+            description="No transactions matched the search query or risk filter."
+            actionLabel="Clear search & filters"
+            onAction={() => {
+              setSearchTerm('');
+              setFilterLevel('ALL');
+            }}
+            className="py-16"
+          />
         )}
       </div>
     </div>
