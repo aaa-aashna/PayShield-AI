@@ -45,9 +45,9 @@ data/processed/*
 !data/processed/.gitkeep
 
 # Experiment artifacts
-experiments/*
-!experiments/.gitkeep
-!experiments/README.md
+experiments/__pycache__/
+experiments/artifacts/*.parquet
+experiments/artifacts/*.pkl
 
 # Model artifacts
 *.pkl

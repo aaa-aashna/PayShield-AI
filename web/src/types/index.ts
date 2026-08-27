@@ -119,6 +119,51 @@ export interface ModelComparisonEntry {
   test_metrics: Record<string, any>;
 }
 
+export interface ExternalBenchmarkModelEntry {
+  model_name: string;
+  fit_time_seconds: number;
+  test_pr_auc: number;
+  test_roc_auc: number;
+  test_f1: number;
+  test_precision: number;
+  test_recall: number;
+  test_fpr: number;
+  optimal_threshold: number;
+  optimal_f1: number;
+  optimal_precision: number;
+  optimal_recall: number;
+  confusion_matrix_default?: Record<string, number>;
+  confusion_matrix_optimal?: Record<string, number>;
+  top_k?: Record<string, number>;
+}
+
+export interface ExternalBenchmarkData {
+  benchmark_date: string;
+  primary_internal_dataset: {
+    name: string;
+    context: string;
+    total_samples: number;
+    fraud_rate_pct: number;
+    feature_count: number;
+    models: ModelComparisonEntry[];
+  };
+  external_validation_dataset: {
+    name: string;
+    slug: string;
+    source_url: string;
+    context: string;
+    total_samples: number;
+    fraud_rate_pct: number;
+    feature_count: number;
+    models: ExternalBenchmarkModelEntry[];
+    unsupervised_anomaly?: {
+      model: string;
+      roc_auc: number;
+      pr_auc: number;
+    };
+  };
+}
+
 export interface ThresholdSweepRow {
   threshold: number;
   precision: number;

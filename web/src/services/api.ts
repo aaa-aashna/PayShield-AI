@@ -3,6 +3,7 @@ import {
   AttackSimulationResult,
   AttackStepLog,
   DriftData,
+  ExternalBenchmarkData,
   ModelComparisonEntry,
   SubgraphData,
   ThresholdAnalysisData,
@@ -11,6 +12,7 @@ import {
 import {
   VERIFIED_ALERTS,
   VERIFIED_DRIFT_DATA,
+  VERIFIED_EXTERNAL_BENCHMARK,
   VERIFIED_MODEL_COMPARISON,
   VERIFIED_SUBGRAPH,
   VERIFIED_THRESHOLD_ANALYSIS,
@@ -224,6 +226,7 @@ export const api = {
     model_comparison: ModelComparisonEntry[];
     threshold_analysis: ThresholdAnalysisData;
     attack_robustness: any[];
+    external_benchmark?: ExternalBenchmarkData;
   }> {
     try {
       const res = await fetch(`${API_BASE}/metrics`);
@@ -235,6 +238,7 @@ export const api = {
       model_comparison: VERIFIED_MODEL_COMPARISON,
       threshold_analysis: VERIFIED_THRESHOLD_ANALYSIS,
       attack_robustness: [],
+      external_benchmark: VERIFIED_EXTERNAL_BENCHMARK,
     };
   },
 

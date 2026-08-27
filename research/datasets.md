@@ -326,18 +326,53 @@ Handbook states < 1% fraud rate and mixed feature types at scale ([SimulatedData
 
 ---
 
+## 4. Kaggle Credit Card Fraud Detection (European Cardholders)
+
+### Source
+
+- Kaggle dataset: [Credit Card Fraud Detection](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud)
+- Curators: Machine Learning Group - Université Libre de Bruxelles (ULB) & Worldline (Andrea Dal Pozzo, Olivier Caelen, Reid A. Johnson, Gianluca Bontempi).
+- Academic reference: Andrea Dal Pozzo et al., *Credit Card Fraud Detection: A Realistic Modeling and a Novel Learning Strategy*, IEEE Computational Intelligence Magazine, 2018.
+
+### Payment context
+
+Real credit-card transactions made by European cardholders in September 2013 over a 48-hour continuous window. Transactions are card-not-present / e-commerce authorizations.
+
+### Dataset size
+
+- **Rows:** 284,807 transactions
+- **Fraud count:** 492 fraudulent transactions (**0.172% fraud rate**)
+- **Columns:** 31 columns (`Time`, `V1`–`V28`, `Amount`, `Class`)
+
+### Available fields
+
+| Column | Description |
+|--------|-------------|
+| `Time` | Number of seconds elapsed between current transaction and first transaction in dataset (0 to 172,792) |
+| `V1`–`V28` | Principal components obtained via PCA (anonymized for cardholder confidentiality) |
+| `Amount` | Transaction amount |
+| `Class` | Ground truth fraud label (1 = fraud, 0 = legitimate) |
+
+### Role in PayShield AI
+
+Used as an **independent external validation and model architecture benchmark**:
+- Evaluates the generalization of PayShield's `HistGradientBoostingFraudModel`, `LogisticRegressionFraudModel`, and unsupervised `IsolationForestAnomalyDetector` on real-world European cardholder distributions.
+- Feature schema compatibility: Direct supervised training on `Time` + `V1`..`V28` + `Amount` -> `Class`. No entity identifiers (`CUSTOMER_ID`, `TERMINAL_ID`) are available due to PCA privacy masking.
+- Benchmark results are stored in `experiments/artifacts/external_benchmark_comparison.json` and compared side-by-side with PayShield's primary streaming dataset.
+
+---
+
 ## Comparative summary
 
-| Criterion | IEEE-CIS | PaySim (Kaggle) | FDH Simulator |
-|-----------|----------|-----------------|---------------|
-| Payment domain | E-commerce CNP | Mobile money wallet | Card → merchant terminal |
-| Realism | Real (masked) | Synthetic from aggregates | Synthetic, rule-based |
-| Scale | ~590K train txs | ~6.36M txs | ~1.75M txs (baseline) |
-| Entities | Masked proxies | Account graph | Customer + terminal IDs |
-| Time | Relative `TransactionDT` | Hourly `step` | Wall-clock + relative |
-| Fraud rate | Severe (verify locally) | ~0.129% | ~0.84% (baseline) |
-| Open simulator | No | Yes ([PaySim](https://github.com/EdgarLopezPhD/PaySim)) | Yes ([handbook code](https://github.com/Fraud-Detection-Handbook/fraud-detection-handbook)) |
-| Red Team fit | Low (opaque features) | Medium (graph fraud) | High (transparent scenarios) |
+| Criterion | European Cardholders (Kaggle) | IEEE-CIS | PaySim (Kaggle) | FDH Simulator |
+|-----------|-------------------------------|----------|-----------------|---------------|
+| Payment domain | Card / E-commerce | E-commerce CNP | Mobile money wallet | Card → merchant terminal |
+| Realism | Real (PCA transformed) | Real (masked) | Synthetic from aggregates | Synthetic, rule-based |
+| Scale | 284,807 txs | ~590K train txs | ~6.36M txs | ~1.75M txs (baseline) |
+| Entities | PCA projected | Masked proxies | Account graph | Customer + terminal IDs |
+| Time | Seconds offset `Time` | Relative `TransactionDT` | Hourly `step` | Wall-clock + relative |
+| Fraud rate | **0.172%** (492 / 284.8K) | Severe (verify locally) | ~0.129% | ~0.84% (baseline) |
+| Role in PayShield | **External Validation Benchmark** | Research reference | Secondary reference | **Primary Development / Training** |
 
 ---
 

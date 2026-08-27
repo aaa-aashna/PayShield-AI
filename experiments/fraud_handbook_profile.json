@@ -1,0 +1,292 @@
+{
+  "source_path": "C:\\Users\\HP\\paysheild_ai\\PayShield-AI-1\\data\\raw\\fraud_handbook_raw\\data",
+  "shape": {
+    "rows": 1754155,
+    "columns": 9
+  },
+  "dtypes": {
+    "TRANSACTION_ID": "int64",
+    "TX_DATETIME": "datetime64[ns]",
+    "CUSTOMER_ID": "object",
+    "TERMINAL_ID": "object",
+    "TX_AMOUNT": "float64",
+    "TX_TIME_SECONDS": "object",
+    "TX_TIME_DAYS": "object",
+    "TX_FRAUD": "int64",
+    "TX_FRAUD_SCENARIO": "int64"
+  },
+  "missingness": {
+    "TRANSACTION_ID": {
+      "missing_count": 0,
+      "missing_rate": 0.0
+    },
+    "TX_DATETIME": {
+      "missing_count": 0,
+      "missing_rate": 0.0
+    },
+    "CUSTOMER_ID": {
+      "missing_count": 0,
+      "missing_rate": 0.0
+    },
+    "TERMINAL_ID": {
+      "missing_count": 0,
+      "missing_rate": 0.0
+    },
+    "TX_AMOUNT": {
+      "missing_count": 0,
+      "missing_rate": 0.0
+    },
+    "TX_TIME_SECONDS": {
+      "missing_count": 0,
+      "missing_rate": 0.0
+    },
+    "TX_TIME_DAYS": {
+      "missing_count": 0,
+      "missing_rate": 0.0
+    },
+    "TX_FRAUD": {
+      "missing_count": 0,
+      "missing_rate": 0.0
+    },
+    "TX_FRAUD_SCENARIO": {
+      "missing_count": 0,
+      "missing_rate": 0.0
+    }
+  },
+  "target_candidates": [
+    {
+      "column": "TX_FRAUD",
+      "reasons": [
+        "name_pattern",
+        "binary_values"
+      ],
+      "unique_values": 2,
+      "dtype": "int64"
+    },
+    {
+      "column": "TX_FRAUD_SCENARIO",
+      "reasons": [
+        "name_pattern"
+      ],
+      "unique_values": 4,
+      "dtype": "int64"
+    }
+  ],
+  "class_distributions": {
+    "TX_FRAUD": {
+      "column": "TX_FRAUD",
+      "total_rows": 1754155,
+      "distribution": {
+        "0": {
+          "count": 1739474,
+          "rate": 0.9916307281853656
+        },
+        "1": {
+          "count": 14681,
+          "rate": 0.008369271814634397
+        }
+      }
+    }
+  },
+  "categorical_cardinality": {
+    "TX_DATETIME": {
+      "unique_values": 1635076,
+      "missing_rate": 0.0
+    },
+    "CUSTOMER_ID": {
+      "unique_values": 4990,
+      "missing_rate": 0.0
+    },
+    "TERMINAL_ID": {
+      "unique_values": 10000,
+      "missing_rate": 0.0
+    },
+    "TX_TIME_SECONDS": {
+      "unique_values": 1635076,
+      "missing_rate": 0.0
+    },
+    "TX_TIME_DAYS": {
+      "unique_values": 183,
+      "missing_rate": 0.0
+    },
+    "TX_FRAUD": {
+      "unique_values": 2,
+      "missing_rate": 0.0
+    },
+    "TX_FRAUD_SCENARIO": {
+      "unique_values": 4,
+      "missing_rate": 0.0
+    }
+  },
+  "numerical_summaries": {
+    "TRANSACTION_ID": {
+      "count": 1754155,
+      "mean": 877077.0,
+      "std": 506381.07506271073,
+      "min": 0.0,
+      "25%": 438538.5,
+      "50%": 877077.0,
+      "75%": 1315615.5,
+      "max": 1754154.0
+    },
+    "TX_AMOUNT": {
+      "count": 1754155,
+      "mean": 53.63230163811065,
+      "std": 42.326492198681116,
+      "min": 0.0,
+      "25%": 21.01,
+      "50%": 44.64,
+      "75%": 76.95,
+      "max": 2628.0
+    },
+    "TX_FRAUD": {
+      "count": 1754155,
+      "mean": 0.008369271814634397,
+      "std": 0.09110011984137108,
+      "min": 0.0,
+      "25%": 0.0,
+      "50%": 0.0,
+      "75%": 0.0,
+      "max": 1.0
+    },
+    "TX_FRAUD_SCENARIO": {
+      "count": 1754155,
+      "mean": 0.018823878163560234,
+      "std": 0.2113263188715347,
+      "min": 0.0,
+      "25%": 0.0,
+      "50%": 0.0,
+      "75%": 0.0,
+      "max": 3.0
+    }
+  },
+  "timestamp_candidates": [
+    {
+      "column": "TX_DATETIME",
+      "reasons": [
+        "datetime_dtype",
+        "name_pattern"
+      ],
+      "dtype": "datetime64[ns]",
+      "sample_values": [
+        "2018-04-01 00:00:31",
+        "2018-04-01 00:02:10",
+        "2018-04-01 00:07:56"
+      ]
+    },
+    {
+      "column": "CUSTOMER_ID",
+      "reasons": [
+        "parseable_datetime_sample"
+      ],
+      "dtype": "object",
+      "sample_values": [
+        "596",
+        "4961",
+        "2"
+      ]
+    },
+    {
+      "column": "TERMINAL_ID",
+      "reasons": [
+        "parseable_datetime_sample"
+      ],
+      "dtype": "object",
+      "sample_values": [
+        "3156",
+        "3412",
+        "1365"
+      ]
+    },
+    {
+      "column": "TX_TIME_SECONDS",
+      "reasons": [
+        "name_pattern"
+      ],
+      "dtype": "object",
+      "sample_values": [
+        "31",
+        "130",
+        "476"
+      ]
+    },
+    {
+      "column": "TX_TIME_DAYS",
+      "reasons": [
+        "name_pattern"
+      ],
+      "dtype": "object",
+      "sample_values": [
+        "0",
+        "0",
+        "0"
+      ]
+    }
+  ],
+  "entity_id_candidates": [
+    {
+      "column": "TRANSACTION_ID",
+      "reasons": [
+        "name_pattern",
+        "high_cardinality"
+      ],
+      "unique_values": 1754155,
+      "duplicate_rate": 0.0,
+      "dtype": "int64"
+    },
+    {
+      "column": "TX_DATETIME",
+      "reasons": [
+        "high_cardinality"
+      ],
+      "unique_values": 1635076,
+      "duplicate_rate": 0.06788396692424559,
+      "dtype": "datetime64[ns]"
+    },
+    {
+      "column": "TX_TIME_SECONDS",
+      "reasons": [
+        "high_cardinality"
+      ],
+      "unique_values": 1635076,
+      "duplicate_rate": 0.06788396692424559,
+      "dtype": "object"
+    },
+    {
+      "column": "TX_AMOUNT",
+      "reasons": [
+        "high_cardinality"
+      ],
+      "unique_values": 24585,
+      "duplicate_rate": 0.9859847048863983,
+      "dtype": "float64"
+    },
+    {
+      "column": "TERMINAL_ID",
+      "reasons": [
+        "name_pattern"
+      ],
+      "unique_values": 10000,
+      "duplicate_rate": 0.9942992494961962,
+      "dtype": "object"
+    },
+    {
+      "column": "CUSTOMER_ID",
+      "reasons": [
+        "name_pattern"
+      ],
+      "unique_values": 4990,
+      "duplicate_rate": 0.9971553254986019,
+      "dtype": "object"
+    }
+  ],
+  "duplicate_rows": {
+    "duplicate_count": 0,
+    "duplicate_rate": 0.0
+  },
+  "potential_leakage_columns": [],
+  "notes": [
+    "Profiling is heuristic and schema-agnostic; validate findings manually.",
+    "Target, timestamp, entity, and leakage candidates are suggestions only."
+  ]
+}

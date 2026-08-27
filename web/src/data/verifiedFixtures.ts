@@ -1,6 +1,7 @@
 import {
   AlertRecord,
   DriftData,
+  ExternalBenchmarkData,
   ModelComparisonEntry,
   SubgraphData,
   ThresholdAnalysisData,
@@ -53,6 +54,64 @@ export const VERIFIED_MODEL_COMPARISON: ModelComparisonEntry[] = [
     },
   },
 ];
+
+export const VERIFIED_EXTERNAL_BENCHMARK: ExternalBenchmarkData = {
+  benchmark_date: "2026-08-27 14:16:33",
+  primary_internal_dataset: {
+    name: "PayShield Primary Dataset (Fraud Detection Handbook Stream)",
+    context: "Customer-to-Terminal Card Payment Stream",
+    total_samples: 1754155,
+    fraud_rate_pct: 0.837,
+    feature_count: 52,
+    models: VERIFIED_MODEL_COMPARISON,
+  },
+  external_validation_dataset: {
+    name: "Kaggle European Cardholders Credit Card Fraud",
+    slug: "mlg-ulb/creditcardfraud",
+    source_url: "https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud",
+    context: "European Cardholder E-Commerce Transactions (PCA-anonymized)",
+    total_samples: 284807,
+    fraud_rate_pct: 0.172,
+    feature_count: 30,
+    models: [
+      {
+        model_name: "Logistic Regression (Baseline)",
+        fit_time_seconds: 0.29,
+        test_pr_auc: 0.2568,
+        test_roc_auc: 0.9387,
+        test_f1: 0.0366,
+        test_precision: 0.0187,
+        test_recall: 0.8571,
+        test_fpr: 0.06302,
+        optimal_threshold: 0.98,
+        optimal_f1: 0.1477,
+        optimal_precision: 0.0839,
+        optimal_recall: 0.6190,
+        confusion_matrix_default: { tp: 18, fp: 944, tn: 14035, fn: 3 },
+      },
+      {
+        model_name: "HistGradientBoosting (Champion)",
+        fit_time_seconds: 13.49,
+        test_pr_auc: 0.3236,
+        test_roc_auc: 0.9292,
+        test_f1: 0.2941,
+        test_precision: 0.3846,
+        test_recall: 0.2381,
+        test_fpr: 0.00053,
+        optimal_threshold: 0.7449,
+        optimal_f1: 0.3846,
+        optimal_precision: 1.0,
+        optimal_recall: 0.2381,
+        confusion_matrix_default: { tp: 5, fp: 8, tn: 14971, fn: 16 },
+      },
+    ],
+    unsupervised_anomaly: {
+      model: "IsolationForestAnomalyDetector",
+      roc_auc: 0.9561,
+      pr_auc: 0.0701,
+    },
+  },
+};
 
 export const VERIFIED_THRESHOLD_ANALYSIS: ThresholdAnalysisData = {
   optimal_threshold: 0.757,

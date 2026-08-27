@@ -130,12 +130,56 @@ PayShield AI includes an adversarial Red Team framework executing 6 realistic at
 
 ---
 
-## 5. Dataset Characteristics & Chronological Splits
+## 5. Datasets & External Validation
 
-Based on the real dataset of **1,754,155 payment transactions** (~0.84% fraud rate, 4,990 customers, 10,000 terminals over 6 months):
-- **Training Set (70%)**: 1,227,908 transactions (`2018-04-01` to `2018-08-07`)
-- **Validation Set (15%)**: 263,123 transactions (`2018-08-07` to `2018-09-03`)
-- **Test Set (15%)**: 263,124 transactions (`2018-09-03` to `2018-09-30`)
+PayShield AI employs a rigorous multi-dataset validation methodology, utilizing a primary streaming dataset for feature extraction and model development, alongside an independent external Kaggle benchmark for cross-distribution generalization evaluation:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                             DATASET METHODOLOGY                             │
+├──────────────────────────────────────┬──────────────────────────────────────┤
+│ PRIMARY DATASET                      │ EXTERNAL BENCHMARK DATASET           │
+│ (Model Development & Training)       │ (Independent External Validation)    │
+│                                      │                                      │
+│ • Fraud Detection Handbook (FDH)     │ • Kaggle Credit Card Fraud Detection │
+│ • 1,754,155 payment transactions     │ • 284,807 European cardholder txs    │
+│ • 0.837% fraud rate over 183 days    │ • 0.172% fraud rate (492 cases)      │
+│ • Full Customer & Terminal IDs       │ • 28 PCA dimensions (V1–V28) + Time  │
+│ • 52 streaming engineered features   │ • Independent 70/30 chronological    │
+└──────────────────────────────────────┴──────────────────────────────────────┘
+```
+
+### A. Primary Dataset (Development & Training)
+- **Source**: Fraud Detection Handbook (FDH) Transaction Stream
+- **Volume**: 1,754,155 transactions (Train: 1,227,908 [70%], Val: 263,123 [15%], Test: 263,124 [15%])
+- **Entities**: 5,000 customers, 10,000 terminals, continuous timestamps across 6 months (`2018-04-01` to `2018-09-30`).
+- **Features**: 52 leakage-safe behavioral, terminal, temporal, and graph signals.
+
+### B. External Kaggle Benchmark Dataset (Independent Validation)
+- **Dataset Name**: **Credit Card Fraud Detection (European Cardholders)**
+- **Kaggle Dataset Slug**: [`mlg-ulb/creditcardfraud`](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud)
+- **Source URL**: [https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud)
+- **Curation**: Machine Learning Group — Université Libre de Bruxelles (ULB) & Worldline.
+- **Why this dataset**: Gold-standard external benchmark representing 284,807 real-world European cardholder e-commerce transactions with severe class imbalance (0.172% fraud).
+- **How to Obtain**:
+  ```bash
+  # Option 1: Using Kaggle CLI (requires ~/.kaggle/kaggle.json)
+  kaggle datasets download -d mlg-ulb/creditcardfraud -p data/raw/ --unzip
+
+  # Option 2: Direct browser download
+  # Download creditcard.csv from https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
+  # Place into data/raw/creditcard.csv
+  ```
+  *(Note: When running in offline or CI/CD environments without the raw CSV, PayShield includes a calibrated synthetic benchmark loader so tests and evaluations run with zero dependencies).*
+
+### C. Multi-Dataset Benchmark Comparison
+
+| Dataset | Split / Samples | Model Architecture | PR-AUC | ROC-AUC | Precision | Recall | F1 Score |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **PayShield Primary** | Test (263K txs, 0.84% fraud) | Logistic Regression (Baseline) | 0.0986 | 0.8486 | 18.9% | 38.0% | 0.2526 |
+| **PayShield Primary** | Test (263K txs, 0.84% fraud) | **HistGradientBoosting (Champion)** | **0.3526** | **0.8516** | **21.7%** | **57.6%** | **0.3150** |
+| **Kaggle External** | Test (85K txs, 0.172% fraud) | Logistic Regression (Baseline) | 0.2568 | 0.9387 | 8.4% (opt) | 61.9% | 0.1477 |
+| **Kaggle External** | Test (85K txs, 0.172% fraud) | **HistGradientBoosting (Champion)** | **0.3236** | **0.9292** | **100.0% (opt)** | **23.8%** | **0.3846** |
 
 ---
 
@@ -166,13 +210,23 @@ cd ..
 python -m pytest tests -v
 ```
 
-### 3. Launch FastAPI Backend Service
+### 3. Run External Kaggle Benchmark Suite
+```powershell
+python -m experiments.kaggle_benchmark
+```
+
+### 4. Run Primary Experiment Suite
+```powershell
+python -m experiments.run_experiments
+```
+
+### 5. Launch FastAPI Backend Service
 ```powershell
 python -m uvicorn api.main:app --reload --port 8000
 ```
 - API Docs (Swagger): `http://localhost:8000/docs`
 
-### 4. Launch React Frontend Console
+### 6. Launch React Frontend Console
 ```powershell
 cd web
 npm run dev

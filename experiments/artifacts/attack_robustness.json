@@ -1,0 +1,302 @@
+[
+  {
+    "attack_type": "Transaction Burst",
+    "intensity": 0.2,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 73.4542178246718,
+    "detection_step": 2,
+    "alerts_count": 3
+  },
+  {
+    "attack_type": "Transaction Burst",
+    "intensity": 0.4,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 100.0,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Transaction Burst",
+    "intensity": 0.6,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 100.0,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Transaction Burst",
+    "intensity": 0.8,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 100.0,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Transaction Burst",
+    "intensity": 1.0,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 100.0,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Amount Escalation",
+    "intensity": 0.2,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 100.0,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Amount Escalation",
+    "intensity": 0.4,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 100.0,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Amount Escalation",
+    "intensity": 0.6,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 100.0,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Amount Escalation",
+    "intensity": 0.8,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 100.0,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Amount Escalation",
+    "intensity": 1.0,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 100.0,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Terminal Hopping",
+    "intensity": 0.2,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 100.0,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Terminal Hopping",
+    "intensity": 0.4,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 100.0,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Terminal Hopping",
+    "intensity": 0.6,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 100.0,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Terminal Hopping",
+    "intensity": 0.8,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 100.0,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Terminal Hopping",
+    "intensity": 1.0,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 100.0,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Behavioral Shift",
+    "intensity": 0.2,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 100.0,
+    "detection_step": 1,
+    "alerts_count": 1
+  },
+  {
+    "attack_type": "Behavioral Shift",
+    "intensity": 0.4,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 100.0,
+    "detection_step": 1,
+    "alerts_count": 1
+  },
+  {
+    "attack_type": "Behavioral Shift",
+    "intensity": 0.6,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 100.0,
+    "detection_step": 1,
+    "alerts_count": 1
+  },
+  {
+    "attack_type": "Behavioral Shift",
+    "intensity": 0.8,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 100.0,
+    "detection_step": 1,
+    "alerts_count": 1
+  },
+  {
+    "attack_type": "Behavioral Shift",
+    "intensity": 1.0,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 100.0,
+    "detection_step": 1,
+    "alerts_count": 1
+  },
+  {
+    "attack_type": "Coordinated Attack",
+    "intensity": 0.2,
+    "detected": true,
+    "blocked": false,
+    "max_risk_score": 66.97752037442916,
+    "average_risk_score": 66.91398912538551,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Coordinated Attack",
+    "intensity": 0.4,
+    "detected": true,
+    "blocked": false,
+    "max_risk_score": 66.97613843350707,
+    "average_risk_score": 66.89594024489136,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Coordinated Attack",
+    "intensity": 0.6,
+    "detected": true,
+    "blocked": false,
+    "max_risk_score": 66.95531473907974,
+    "average_risk_score": 66.88246127502478,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Coordinated Attack",
+    "intensity": 0.8,
+    "detected": true,
+    "blocked": false,
+    "max_risk_score": 66.92742950890955,
+    "average_risk_score": 66.87958004986945,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Coordinated Attack",
+    "intensity": 1.0,
+    "detected": true,
+    "blocked": false,
+    "max_risk_score": 66.88499241559487,
+    "average_risk_score": 66.84957918577513,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Slow and Low",
+    "intensity": 0.2,
+    "detected": false,
+    "blocked": false,
+    "max_risk_score": 57.54971471374834,
+    "average_risk_score": 57.54563843369813,
+    "detection_step": null,
+    "alerts_count": 0
+  },
+  {
+    "attack_type": "Slow and Low",
+    "intensity": 0.4,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 86.64379648429691,
+    "detection_step": 1,
+    "alerts_count": 4
+  },
+  {
+    "attack_type": "Slow and Low",
+    "intensity": 0.6,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 99.7255202987549,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Slow and Low",
+    "intensity": 0.8,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 99.73163933144204,
+    "detection_step": 1,
+    "alerts_count": 5
+  },
+  {
+    "attack_type": "Slow and Low",
+    "intensity": 1.0,
+    "detected": true,
+    "blocked": true,
+    "max_risk_score": 100.0,
+    "average_risk_score": 100.0,
+    "detection_step": 1,
+    "alerts_count": 5
+  }
+]

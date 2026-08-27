@@ -459,16 +459,28 @@ def get_metrics():
     comparison_file = artifacts_dir / "model_comparison.json"
     threshold_file = artifacts_dir / "threshold_analysis.json"
     robustness_file = artifacts_dir / "attack_robustness.json"
+    ext_file = artifacts_dir / "external_benchmark_comparison.json"
 
     comparison = json.loads(comparison_file.read_text()) if comparison_file.exists() else []
     threshold = json.loads(threshold_file.read_text()) if threshold_file.exists() else {}
     robustness = json.loads(robustness_file.read_text()) if robustness_file.exists() else []
+    external_benchmark = json.loads(ext_file.read_text()) if ext_file.exists() else None
 
     return {
         "model_comparison": comparison,
         "threshold_analysis": threshold,
         "attack_robustness": robustness,
+        "external_benchmark": external_benchmark,
     }
+
+
+@app.get("/metrics/external-benchmark")
+def get_external_benchmark():
+    """Return independent Kaggle European Cardholders external validation benchmark results."""
+    ext_file = Path("experiments/artifacts/external_benchmark_comparison.json")
+    if ext_file.exists():
+        return json.loads(ext_file.read_text())
+    raise HTTPException(status_code=404, detail="External benchmark artifact not found.")
 
 
 @app.get("/risk-summary")

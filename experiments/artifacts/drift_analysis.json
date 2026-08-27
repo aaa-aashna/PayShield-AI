@@ -1,0 +1,487 @@
+{
+  "overall_status": "CRITICAL",
+  "summary": {
+    "STABLE": 22,
+    "WARNING": 1,
+    "CRITICAL": 29
+  },
+  "features": [
+    {
+      "metric_name": "CUST_TX_COUNT_TOTAL",
+      "psi_value": 2.4571,
+      "ks_statistic": 0.6163,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 13.402,
+      "target_mean": 36.9
+    },
+    {
+      "metric_name": "CUST_TIME_SINCE_PREV",
+      "psi_value": 0.0881,
+      "ks_statistic": 0.1797,
+      "ks_p_value": 0.0,
+      "status": "STABLE",
+      "baseline_mean": 66191.453,
+      "target_mean": 447935.362
+    },
+    {
+      "metric_name": "CUST_AMOUNT_MEAN",
+      "psi_value": 0.0392,
+      "ks_statistic": 0.0536,
+      "ks_p_value": 0.0,
+      "status": "STABLE",
+      "baseline_mean": 51.033,
+      "target_mean": 53.361
+    },
+    {
+      "metric_name": "CUST_AMOUNT_STD",
+      "psi_value": 0.0907,
+      "ks_statistic": 0.1164,
+      "ks_p_value": 0.0,
+      "status": "STABLE",
+      "baseline_mean": 22.141,
+      "target_mean": 24.88
+    },
+    {
+      "metric_name": "CUST_AMOUNT_MEDIAN",
+      "psi_value": 0.0399,
+      "ks_statistic": 0.054,
+      "ks_p_value": 0.0,
+      "status": "STABLE",
+      "baseline_mean": 50.205,
+      "target_mean": 52.244
+    },
+    {
+      "metric_name": "CUST_AMOUNT_RATIO",
+      "psi_value": 0.0231,
+      "ks_statistic": 0.0269,
+      "ks_p_value": 0.0,
+      "status": "STABLE",
+      "baseline_mean": 1.085,
+      "target_mean": 1.017
+    },
+    {
+      "metric_name": "CUST_AMOUNT_DIFF",
+      "psi_value": 0.0212,
+      "ks_statistic": 0.0269,
+      "ks_p_value": 0.0,
+      "status": "STABLE",
+      "baseline_mean": 0.01,
+      "target_mean": 0.477
+    },
+    {
+      "metric_name": "CUST_AMOUNT_ZSCORE",
+      "psi_value": 0.0552,
+      "ks_statistic": 0.0372,
+      "ks_p_value": 0.0,
+      "status": "STABLE",
+      "baseline_mean": -0.082,
+      "target_mean": 0.025
+    },
+    {
+      "metric_name": "CUST_TX_COUNT_5M",
+      "psi_value": 0.0,
+      "ks_statistic": 0.0019,
+      "ks_p_value": 1.0,
+      "status": "STABLE",
+      "baseline_mean": 0.011,
+      "target_mean": 0.013
+    },
+    {
+      "metric_name": "CUST_TX_COUNT_30M",
+      "psi_value": 0.0,
+      "ks_statistic": 0.0023,
+      "ks_p_value": 0.9999,
+      "status": "STABLE",
+      "baseline_mean": 0.067,
+      "target_mean": 0.07
+    },
+    {
+      "metric_name": "CUST_TX_COUNT_1H",
+      "psi_value": 0.0,
+      "ks_statistic": 0.0017,
+      "ks_p_value": 1.0,
+      "status": "STABLE",
+      "baseline_mean": 0.135,
+      "target_mean": 0.139
+    },
+    {
+      "metric_name": "CUST_TX_COUNT_24H",
+      "psi_value": 0.0505,
+      "ks_statistic": 0.0947,
+      "ks_p_value": 0.0,
+      "status": "STABLE",
+      "baseline_mean": 2.432,
+      "target_mean": 2.085
+    },
+    {
+      "metric_name": "CUST_TX_COUNT_7D",
+      "psi_value": 2.8736,
+      "ks_statistic": 0.5269,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 11.96,
+      "target_mean": 3.374
+    },
+    {
+      "metric_name": "CUST_SPEND_1H",
+      "psi_value": 0.0,
+      "ks_statistic": 0.0023,
+      "ks_p_value": 0.9999,
+      "status": "STABLE",
+      "baseline_mean": 7.321,
+      "target_mean": 7.325
+    },
+    {
+      "metric_name": "CUST_SPEND_24H",
+      "psi_value": 0.0363,
+      "ks_statistic": 0.077,
+      "ks_p_value": 0.0,
+      "status": "STABLE",
+      "baseline_mean": 131.213,
+      "target_mean": 112.461
+    },
+    {
+      "metric_name": "CUST_UNIQUE_TERMINALS",
+      "psi_value": 2.4232,
+      "ks_statistic": 0.6045,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 11.743,
+      "target_mean": 28.202
+    },
+    {
+      "metric_name": "CUST_IS_NEW_TERMINAL",
+      "psi_value": 0.264,
+      "ks_statistic": 0.2239,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 0.838,
+      "target_mean": 0.614
+    },
+    {
+      "metric_name": "CUST_UNUSUAL_HOUR_SCORE",
+      "psi_value": 0.982,
+      "ks_statistic": 0.2622,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 0.608,
+      "target_mean": 0.774
+    },
+    {
+      "metric_name": "CUST_BEHAVIOR_DEVIATION",
+      "psi_value": 0.265,
+      "ks_statistic": 0.2214,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 0.202,
+      "target_mean": 0.149
+    },
+    {
+      "metric_name": "TERM_TX_COUNT_TOTAL",
+      "psi_value": 4.0809,
+      "ks_statistic": 0.6983,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 5.217,
+      "target_mean": 14.392
+    },
+    {
+      "metric_name": "TERM_AMOUNT_MEAN",
+      "psi_value": 1.0394,
+      "ks_statistic": 0.2103,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 48.207,
+      "target_mean": 53.524
+    },
+    {
+      "metric_name": "TERM_AMOUNT_STD",
+      "psi_value": 0.9546,
+      "ks_statistic": 0.352,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 30.235,
+      "target_mean": 37.911
+    },
+    {
+      "metric_name": "TERM_AMOUNT_RATIO",
+      "psi_value": 0.6296,
+      "ks_statistic": 0.074,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 1.424,
+      "target_mean": 1.06
+    },
+    {
+      "metric_name": "TERM_AMOUNT_ZSCORE",
+      "psi_value": 0.7943,
+      "ks_statistic": 0.0743,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 0.869,
+      "target_mean": 0.075
+    },
+    {
+      "metric_name": "TERM_UNIQUE_CUSTOMERS",
+      "psi_value": 3.6966,
+      "ks_statistic": 0.6684,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 4.635,
+      "target_mean": 11.312
+    },
+    {
+      "metric_name": "TERM_CUSTOMER_DIVERSITY",
+      "psi_value": 0.6919,
+      "ks_statistic": 0.1417,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 0.754,
+      "target_mean": 0.741
+    },
+    {
+      "metric_name": "TERM_IS_NEW_CUSTOMER",
+      "psi_value": 0.264,
+      "ks_statistic": 0.2239,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 0.838,
+      "target_mean": 0.614
+    },
+    {
+      "metric_name": "TERM_TX_COUNT_1H",
+      "psi_value": 0.0,
+      "ks_statistic": 0.0033,
+      "ks_p_value": 0.9815,
+      "status": "STABLE",
+      "baseline_mean": 0.052,
+      "target_mean": 0.055
+    },
+    {
+      "metric_name": "TERM_TX_COUNT_24H",
+      "psi_value": 0.0229,
+      "ks_statistic": 0.0736,
+      "ks_p_value": 0.0,
+      "status": "STABLE",
+      "baseline_mean": 0.947,
+      "target_mean": 0.816
+    },
+    {
+      "metric_name": "TERM_VOLUME_1H",
+      "psi_value": 0.0,
+      "ks_statistic": 0.0034,
+      "ks_p_value": 0.9713,
+      "status": "STABLE",
+      "baseline_mean": 2.729,
+      "target_mean": 2.912
+    },
+    {
+      "metric_name": "TERM_FRAUD_RATE_SMOOTHED",
+      "psi_value": 3.3699,
+      "ks_statistic": 0.6473,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 0.008,
+      "target_mean": 0.008
+    },
+    {
+      "metric_name": "TERM_RISK_SCORE",
+      "psi_value": 0.2624,
+      "ks_statistic": 0.1179,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 0.165,
+      "target_mean": 0.151
+    },
+    {
+      "metric_name": "TX_HOUR",
+      "psi_value": 0.029,
+      "ks_statistic": 0.0765,
+      "ks_p_value": 0.0,
+      "status": "STABLE",
+      "baseline_mean": 11.623,
+      "target_mean": 12.307
+    },
+    {
+      "metric_name": "TX_DOW",
+      "psi_value": 3.826,
+      "ks_statistic": 0.489,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 3.204,
+      "target_mean": 5.149
+    },
+    {
+      "metric_name": "TX_DOM",
+      "psi_value": 4.8477,
+      "ks_statistic": 0.6162,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 14.317,
+      "target_mean": 29.149
+    },
+    {
+      "metric_name": "TX_MONTH",
+      "psi_value": 3.7121,
+      "ks_statistic": 1.0,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 7.582,
+      "target_mean": 9.0
+    },
+    {
+      "metric_name": "TX_HOUR_SIN",
+      "psi_value": 0.0216,
+      "ks_statistic": 0.0689,
+      "ks_p_value": 0.0,
+      "status": "STABLE",
+      "baseline_mean": 0.026,
+      "target_mean": -0.063
+    },
+    {
+      "metric_name": "TX_HOUR_COS",
+      "psi_value": 0.0104,
+      "ks_statistic": 0.0516,
+      "ks_p_value": 0.0,
+      "status": "STABLE",
+      "baseline_mean": -0.366,
+      "target_mean": -0.417
+    },
+    {
+      "metric_name": "TX_DOW_SIN",
+      "psi_value": 4.1494,
+      "ks_statistic": 0.489,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": -0.173,
+      "target_mean": -0.772
+    },
+    {
+      "metric_name": "TX_DOW_COS",
+      "psi_value": 3.826,
+      "ks_statistic": 0.2969,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 0.109,
+      "target_mean": -0.057
+    },
+    {
+      "metric_name": "TX_IS_WEEKEND",
+      "psi_value": 0.6282,
+      "ks_statistic": 0.381,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 0.382,
+      "target_mean": 0.763
+    },
+    {
+      "metric_name": "TX_IS_NIGHT",
+      "psi_value": 0.0114,
+      "ks_statistic": 0.0338,
+      "ks_p_value": 0.0,
+      "status": "STABLE",
+      "baseline_mean": 0.13,
+      "target_mean": 0.097
+    },
+    {
+      "metric_name": "TX_IS_BUSINESS_HOURS",
+      "psi_value": 0.1525,
+      "ks_statistic": 0.1714,
+      "ks_p_value": 0.0,
+      "status": "WARNING",
+      "baseline_mean": 0.357,
+      "target_mean": 0.186
+    },
+    {
+      "metric_name": "TX_LOG_AMOUNT",
+      "psi_value": 0.0006,
+      "ks_statistic": 0.0043,
+      "ks_p_value": 0.8478,
+      "status": "STABLE",
+      "baseline_mean": 3.659,
+      "target_mean": 3.66
+    },
+    {
+      "metric_name": "GRAPH_CUST_DEGREE",
+      "psi_value": 2.4232,
+      "ks_statistic": 0.6045,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 11.743,
+      "target_mean": 28.202
+    },
+    {
+      "metric_name": "GRAPH_TERM_DEGREE",
+      "psi_value": 3.6966,
+      "ks_statistic": 0.6684,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 4.635,
+      "target_mean": 11.312
+    },
+    {
+      "metric_name": "GRAPH_NEW_RELATIONSHIP",
+      "psi_value": 0.264,
+      "ks_statistic": 0.2239,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 0.838,
+      "target_mean": 0.614
+    },
+    {
+      "metric_name": "GRAPH_EDGE_WEIGHT",
+      "psi_value": 0.264,
+      "ks_statistic": 0.2239,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 0.186,
+      "target_mean": 0.506
+    },
+    {
+      "metric_name": "GRAPH_SHARED_CUSTOMERS",
+      "psi_value": 3.6966,
+      "ks_statistic": 0.6684,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 4.635,
+      "target_mean": 11.312
+    },
+    {
+      "metric_name": "GRAPH_NEIGHBORHOOD_FRAUD_RISK",
+      "psi_value": 0.5276,
+      "ks_statistic": 0.5213,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 0.076,
+      "target_mean": 0.195
+    },
+    {
+      "metric_name": "GRAPH_RISK_SCORE",
+      "psi_value": 0.9919,
+      "ks_statistic": 0.2743,
+      "ks_p_value": 0.0,
+      "status": "CRITICAL",
+      "baseline_mean": 0.324,
+      "target_mean": 0.293
+    },
+    {
+      "metric_name": "TX_RAW_AMOUNT",
+      "psi_value": 0.0006,
+      "ks_statistic": 0.0043,
+      "ks_p_value": 0.8478,
+      "status": "STABLE",
+      "baseline_mean": 53.665,
+      "target_mean": 53.876
+    }
+  ],
+  "prediction_drift": {
+    "metric_name": "fraud_prediction_probability",
+    "psi_value": 2.8304,
+    "ks_statistic": 0.6766,
+    "ks_p_value": 0.0,
+    "status": "CRITICAL",
+    "baseline_mean": 0.202,
+    "target_mean": 0.039
+  }
+}

@@ -1,0 +1,78 @@
+[
+  {
+    "model_name": "Logistic Regression (Baseline)",
+    "fit_time_seconds": 2.17,
+    "val_pr_auc": 0.1415,
+    "val_roc_auc": 0.8899,
+    "val_f1": 0.3142,
+    "val_precision": 0.2507,
+    "val_recall": 0.4208,
+    "test_pr_auc": 0.0986,
+    "test_roc_auc": 0.8486,
+    "test_f1": 0.2526,
+    "test_precision": 0.1893,
+    "test_recall": 0.3795,
+    "test_fpr": 0.01469,
+    "test_metrics": {
+      "pr_auc": 0.09855934258942707,
+      "roc_auc": 0.8486341188477329,
+      "precision": 0.18930957683741648,
+      "recall": 0.3794642857142857,
+      "f1": 0.2526002971768202,
+      "fpr": 0.01469163706813045,
+      "threshold": 0.5,
+      "true_positives": 85,
+      "false_positives": 364,
+      "true_negatives": 24412,
+      "false_negatives": 139,
+      "total_samples": 25000,
+      "total_fraud": 224,
+      "top_k": {
+        "precision@100": 0.03,
+        "recall@100": 0.013392857142857142,
+        "precision@500": 0.182,
+        "recall@500": 0.40625,
+        "precision@1000": 0.12,
+        "recall@1000": 0.5357142857142857
+      }
+    }
+  },
+  {
+    "model_name": "HistGradientBoosting (Champion)",
+    "fit_time_seconds": 16.01,
+    "val_pr_auc": 0.3461,
+    "val_roc_auc": 0.8679,
+    "val_f1": 0.3935,
+    "val_precision": 0.3071,
+    "val_recall": 0.5475,
+    "test_pr_auc": 0.3526,
+    "test_roc_auc": 0.8516,
+    "test_f1": 0.315,
+    "test_precision": 0.2168,
+    "test_recall": 0.5759,
+    "test_fpr": 0.01881,
+    "test_metrics": {
+      "pr_auc": 0.3526261801973061,
+      "roc_auc": 0.8515845727720375,
+      "precision": 0.21680672268907564,
+      "recall": 0.5758928571428571,
+      "f1": 0.315018315018315,
+      "fpr": 0.018808524378430738,
+      "threshold": 0.5,
+      "true_positives": 129,
+      "false_positives": 466,
+      "true_negatives": 24310,
+      "false_negatives": 95,
+      "total_samples": 25000,
+      "total_fraud": 224,
+      "top_k": {
+        "precision@100": 0.48,
+        "recall@100": 0.21428571428571427,
+        "precision@500": 0.246,
+        "recall@500": 0.5491071428571429,
+        "precision@1000": 0.153,
+        "recall@1000": 0.6830357142857143
+      }
+    }
+  }
+]

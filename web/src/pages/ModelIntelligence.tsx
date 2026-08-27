@@ -11,11 +11,12 @@ import {
   ReferenceLine,
 } from 'recharts';
 import { api } from '../services/api';
-import { ModelComparisonEntry, ThresholdAnalysisData } from '../types';
+import { ExternalBenchmarkData, ModelComparisonEntry, ThresholdAnalysisData } from '../types';
 
 export const ModelIntelligence: React.FC = () => {
   const [comparison, setComparison] = useState<ModelComparisonEntry[]>([]);
   const [thresholdData, setThresholdData] = useState<ThresholdAnalysisData | null>(null);
+  const [externalBenchmark, setExternalBenchmark] = useState<ExternalBenchmarkData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,6 +25,9 @@ export const ModelIntelligence: React.FC = () => {
         const res = await api.getMetrics();
         setComparison(res.model_comparison);
         setThresholdData(res.threshold_analysis);
+        if (res.external_benchmark) {
+          setExternalBenchmark(res.external_benchmark);
+        }
       } catch (e) {
         console.error(e);
       } finally {
@@ -56,7 +60,7 @@ export const ModelIntelligence: React.FC = () => {
             Model intelligence
           </h1>
           <p className="text-sm text-ink-secondary max-w-xl font-sans pt-1">
-            Empirical evaluation results on unseen chronological test transactions (0.84% fraud rate).
+            Empirical evaluation results across primary streaming datasets and independent external benchmarks.
           </p>
         </div>
 
@@ -85,11 +89,14 @@ export const ModelIntelligence: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. Benchmark Table */}
+      {/* 2. Primary Dataset Benchmark Table */}
       <div className="space-y-3 pt-2">
-        <h2 className="text-xs font-mono uppercase tracking-widest text-ink font-semibold">
-          Model comparison
-        </h2>
+        <div className="flex justify-between items-baseline">
+          <h2 className="text-xs font-mono uppercase tracking-widest text-ink font-semibold">
+            Primary dataset comparison (PayShield stream · 1.75M transactions)
+          </h2>
+          <span className="text-[11px] font-mono text-ink-muted">0.84% fraud rate</span>
+        </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs font-mono">
@@ -129,7 +136,68 @@ export const ModelIntelligence: React.FC = () => {
         </div>
       </div>
 
-      {/* 3. Two Columns: Threshold Optimization Curve & Feature Importance */}
+      {/* 3. External Kaggle Validation Benchmark Table */}
+      {externalBenchmark && (
+        <div className="space-y-3 pt-4 border-t border-surface-border">
+          <div className="flex justify-between items-baseline">
+            <div>
+              <h2 className="text-xs font-mono uppercase tracking-widest text-ink font-semibold">
+                External validation benchmark ({externalBenchmark.external_validation_dataset.name})
+              </h2>
+              <p className="text-[11px] font-sans text-ink-secondary pt-0.5">
+                Evaluated on independent Kaggle European cardholder transactions (284K records · 0.172% fraud rate · PCA anonymized).
+              </p>
+            </div>
+            <a
+              href={externalBenchmark.external_validation_dataset.source_url}
+              target="_blank"
+              rel="noreferrer"
+              className="text-[11px] font-mono text-ink-muted hover:text-ink underline"
+            >
+              Kaggle Source ↗
+            </a>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs font-mono">
+              <thead className="text-[11px] uppercase text-ink-muted border-b border-surface-border">
+                <tr>
+                  <th className="py-2.5 px-3">Model on Kaggle benchmark</th>
+                  <th className="py-2.5 px-3 text-center">PR-AUC</th>
+                  <th className="py-2.5 px-3 text-center">ROC-AUC</th>
+                  <th className="py-2.5 px-3 text-center">Precision (opt)</th>
+                  <th className="py-2.5 px-3 text-center">Recall (opt)</th>
+                  <th className="py-2.5 px-3 text-center">F1 score</th>
+                  <th className="py-2.5 px-3 text-right">Fit time</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-surface-border text-[11px]">
+                {externalBenchmark.external_validation_dataset.models.map((m) => {
+                  const isChampion = m.model_name.includes('Champion');
+                  return (
+                    <tr key={m.model_name} className={isChampion ? 'font-semibold text-ink' : 'text-ink-secondary'}>
+                      <td className="py-3 px-3">
+                        <span>{m.model_name}</span>
+                        {isChampion && <span className="text-[10px] text-risk-low uppercase ml-2">(Champion)</span>}
+                      </td>
+                      <td className={`py-3 px-3 text-center ${isChampion ? 'text-risk-low font-bold' : ''}`}>
+                        {m.test_pr_auc.toFixed(4)}
+                      </td>
+                      <td className="py-3 px-3 text-center">{m.test_roc_auc.toFixed(4)}</td>
+                      <td className="py-3 px-3 text-center">{(m.optimal_precision * 100).toFixed(1)}%</td>
+                      <td className="py-3 px-3 text-center">{(m.optimal_recall * 100).toFixed(1)}%</td>
+                      <td className="py-3 px-3 text-center">{m.optimal_f1.toFixed(4)}</td>
+                      <td className="py-3 px-3 text-right text-ink-muted">{m.fit_time_seconds}s</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* 4. Two Columns: Threshold Optimization Curve & Feature Importance */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-4 border-t border-surface-border">
         {/* Left: Threshold Optimizer */}
         <div className="lg:col-span-7 space-y-3">
