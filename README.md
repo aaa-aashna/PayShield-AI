@@ -1,20 +1,5 @@
 # PayShield AI: Adaptive ML-Driven Payment Security & Fraud Intelligence Platform
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-GitHub_Pages-black?style=for-the-badge&logo=github)](https://aaa-aashna.github.io/PayShield-AI/)
-[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
-[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
-
-> **PayShield AI** is an end-to-end, machine-learning-driven payment security platform that replaces static, easily-evaded fraud rules with **customer behavioral profiling**, **terminal intelligence**, **bipartite graph relationship analytics**, **unsupervised anomaly isolation**, **hybrid risk fusion**, and **closed-loop adversarial Red Team attack simulations**.
-
----
-
-## 🌐 Live Hosted Application
-
-- **Live Web Console**: **[https://aaa-aashna.github.io/PayShield-AI/](https://aaa-aashna.github.io/PayShield-AI/)**
-- **GitHub Repository**: [https://github.com/aaa-aashna/PayShield-AI](https://github.com/aaa-aashna/PayShield-AI)
-
----
 
 ## 1. Problem: Why Traditional Fraud Rules Fail
 
