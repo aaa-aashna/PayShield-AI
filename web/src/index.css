@@ -6,13 +6,20 @@
   body {
     @apply bg-background text-ink font-sans antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Tabular numbers for financial data tables */
+  .font-numeric {
+    font-variant-numeric: tabular-nums;
   }
 }
 
 /* Crisp minimal scrollbar */
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -20,9 +27,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d4d4d0;
+  background: #cbd5e1;
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a2;
+  background: #94a3b8;
 }

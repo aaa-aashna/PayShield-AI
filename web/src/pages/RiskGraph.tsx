@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Network, Search, AlertCircle, ArrowRight, CornerDownRight } from 'lucide-react';
+import { Network, Search, AlertCircle, ArrowRight } from 'lucide-react';
 import { LoadingState } from '../components/common/LoadingState';
 import { EmptyState } from '../components/common/EmptyState';
 import { api } from '../services/api';
@@ -19,10 +19,10 @@ export const RiskGraph: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const presets = [
-    { label: 'Cust 1376 (Compromised)', type: 'customer' as const, id: '1376' },
-    { label: 'Cust 1488 (Spike)', type: 'customer' as const, id: '1488' },
-    { label: 'Term 8023 (Risky Hub)', type: 'terminal' as const, id: '8023' },
-    { label: 'Term 1205 (Normal Merchant)', type: 'terminal' as const, id: '1205' },
+    { label: 'Customer 1376 (Compromised)', type: 'customer' as const, id: '1376' },
+    { label: 'Customer 1488 (Burst Spike)', type: 'customer' as const, id: '1488' },
+    { label: 'Terminal 8023 (Risky Hub)', type: 'terminal' as const, id: '8023' },
+    { label: 'Terminal 1205 (Normal Merchant)', type: 'terminal' as const, id: '1205' },
   ];
 
   const fetchGraph = async () => {
@@ -57,132 +57,127 @@ export const RiskGraph: React.FC = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
       {/* 1. Header */}
-      <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
-          <div className="space-y-1">
-            <div className="text-[11px] font-mono uppercase tracking-widest text-ink-muted">
-              Topology Explorer
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-ink">
-              Risk graph intelligence
-            </h1>
-            <p className="text-sm text-ink-secondary max-w-xl font-sans pt-1">
-              Bipartite graph network analyzing cardholder-to-terminal relationships and syndicate clustering.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 font-mono text-xs text-ink-muted">
-            <span>Graph engine:</span>
-            <span className="font-semibold text-ink bg-surface border border-surface-border px-2.5 py-1">
-              Bipartite Network v1.0
-            </span>
-          </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-surface-border">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-ink">
+            Payment Entity Risk Graph
+          </h1>
+          <p className="text-sm text-ink-secondary mt-1">
+            Bipartite network topology analyzing cardholder-to-terminal relationships and syndicate clustering.
+          </p>
         </div>
 
-        {/* 2. Query Controls & Presets */}
-        <div className="bg-surface border border-surface-border p-4 space-y-3 font-mono text-xs">
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex border border-surface-border overflow-hidden">
-              <button
-                onClick={() => setEntityType('customer')}
-                className={`px-3 py-1.5 transition ${
-                  entityType === 'customer'
-                    ? 'bg-ink text-white font-semibold'
-                    : 'bg-background text-ink-secondary hover:text-ink'
-                }`}
-              >
-                Customer
-              </button>
-              <button
-                onClick={() => setEntityType('terminal')}
-                className={`px-3 py-1.5 transition ${
-                  entityType === 'terminal'
-                    ? 'bg-ink text-white font-semibold'
-                    : 'bg-background text-ink-secondary hover:text-ink'
-                }`}
-              >
-                Terminal
-              </button>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span className="text-ink-muted uppercase text-[11px]">Entity ID:</span>
-              <input
-                type="text"
-                value={entityId}
-                onChange={(e) => setEntityId(e.target.value)}
-                className="bg-background border border-surface-border px-3 py-1.5 text-ink focus:border-ink outline-none w-28"
-                placeholder="1376"
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span className="text-ink-muted uppercase text-[11px]">Neighborhood Depth:</span>
-              <select
-                value={depth}
-                onChange={(e) => setDepth(Number(e.target.value))}
-                className="bg-background border border-surface-border px-2.5 py-1.5 text-ink focus:border-ink outline-none"
-              >
-                <option value={1}>1-Hop (Direct)</option>
-                <option value={2}>2-Hops (Bipartite)</option>
-                <option value={3}>3-Hops (Extended)</option>
-              </select>
-            </div>
-
-            <button
-              onClick={fetchGraph}
-              disabled={loading}
-              className="bg-ink hover:bg-neutral-800 text-white font-medium px-4 py-1.5 text-xs transition disabled:opacity-50 ml-auto"
-            >
-              {loading ? 'Rendering map...' : 'Render topology →'}
-            </button>
-          </div>
-
-          {/* Quick Presets */}
-          <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-surface-border text-[11px]">
-            <span className="text-ink-muted uppercase">Sample entities:</span>
-            {presets.map((p) => (
-              <button
-                key={p.label}
-                onClick={() => handlePresetSelect(p)}
-                className="bg-surface-subtle hover:bg-neutral-200 text-ink-secondary hover:text-ink px-2 py-0.5 border border-surface-border transition"
-              >
-                {p.label}
-              </button>
-            ))}
-          </div>
+        <div className="flex items-center gap-2 text-xs font-mono text-ink-muted">
+          <span>Engine:</span>
+          <span className="font-semibold text-ink bg-white border border-surface-border px-3 py-1.5 rounded-md shadow-subtle">
+            Bipartite Network v1.0
+          </span>
         </div>
       </div>
 
-      {/* 3. Map Canvas & Inspector */}
+      {/* 2. Query Toolbar & Presets */}
+      <div className="bg-white border border-surface-border rounded-lg shadow-subtle p-4 space-y-4 font-mono text-xs">
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex bg-slate-100 p-1 rounded-md border border-slate-200">
+            <button
+              onClick={() => setEntityType('customer')}
+              className={`px-3 py-1 rounded text-xs transition font-medium ${
+                entityType === 'customer'
+                  ? 'bg-white text-ink shadow-subtle font-semibold'
+                  : 'text-ink-secondary hover:text-ink'
+              }`}
+            >
+              Customer
+            </button>
+            <button
+              onClick={() => setEntityType('terminal')}
+              className={`px-3 py-1 rounded text-xs transition font-medium ${
+                entityType === 'terminal'
+                  ? 'bg-white text-ink shadow-subtle font-semibold'
+                  : 'text-ink-secondary hover:text-ink'
+              }`}
+            >
+              Terminal
+            </button>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-ink-muted uppercase font-semibold text-[11px]">Entity ID:</span>
+            <input
+              type="text"
+              value={entityId}
+              onChange={(e) => setEntityId(e.target.value)}
+              className="bg-slate-50 border border-surface-border rounded px-3 py-1.5 text-ink focus:border-brand outline-none w-28"
+              placeholder="1376"
+            />
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-ink-muted uppercase font-semibold text-[11px]">Hop Depth:</span>
+            <select
+              value={depth}
+              onChange={(e) => setDepth(Number(e.target.value))}
+              className="bg-slate-50 border border-surface-border rounded px-3 py-1.5 text-ink focus:border-brand outline-none"
+            >
+              <option value={1}>1-Hop (Direct)</option>
+              <option value={2}>2-Hops (Bipartite)</option>
+              <option value={3}>3-Hops (Extended)</option>
+            </select>
+          </div>
+
+          <button
+            onClick={fetchGraph}
+            disabled={loading}
+            className="bg-ink hover:bg-slate-800 text-white font-medium px-4 py-1.5 rounded text-xs transition disabled:opacity-50 ml-auto shadow-subtle"
+          >
+            {loading ? 'Rendering map...' : 'Render Network →'}
+          </button>
+        </div>
+
+        {/* Quick Presets */}
+        <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-slate-100 text-xs">
+          <span className="text-ink-muted uppercase font-semibold text-[11px]">Sample Entities:</span>
+          {presets.map((p) => (
+            <button
+              key={p.label}
+              onClick={() => handlePresetSelect(p)}
+              className="bg-slate-100 hover:bg-slate-200 text-ink-secondary hover:text-ink px-2.5 py-1 rounded border border-slate-200 transition"
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 3. Canvas (8 cols) & Inspector (4 cols) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Canvas */}
-        <div className="lg:col-span-8 bg-surface border border-surface-border p-4 relative min-h-[480px] flex flex-col justify-between">
-          {/* Canvas Legend */}
+        <div className="lg:col-span-8 bg-white border border-surface-border rounded-lg shadow-subtle p-5 flex flex-col justify-between min-h-[480px]">
+          {/* Legend */}
           <div className="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-surface-border font-mono text-[11px] text-ink-muted">
             <div className="flex items-center gap-4">
               <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-blue-600" /> Center query
+                <span className="w-2.5 h-2.5 rounded-full bg-blue-600" /> Center Query
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-red-600" /> Suspicious entity
+                <span className="w-2.5 h-2.5 rounded-full bg-red-600" /> Suspicious Node
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-600" /> Merchant terminal
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-600" /> Merchant Terminal
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-ink" /> Customer
+                <span className="w-2.5 h-2.5 rounded-full bg-slate-900" /> Customer Account
               </span>
             </div>
-            <span>Click any node to inspect</span>
+            <span>Click any node to inspect connections</span>
           </div>
 
-          {/* Graph Visualization */}
+          {/* SVG Map */}
           <div className="flex-1 flex items-center justify-center py-4">
             {loading ? (
-              <LoadingState message="Calculating network topology..." className="py-20" />
+              <LoadingState message="Rendering network topology..." className="py-20" />
             ) : graphData && graphData.nodes.length > 0 ? (
               <svg className="w-full h-full min-h-[380px]" viewBox="0 0 600 360">
                 {/* Edges */}
@@ -211,7 +206,7 @@ export const RiskGraph: React.FC = () => {
                       y1={y1}
                       x2={x2}
                       y2={y2}
-                      stroke="#d4d4d0"
+                      stroke="#cbd5e1"
                       strokeWidth={Math.min(3, Math.max(1, edge.weight * 0.4))}
                     />
                   );
@@ -230,7 +225,7 @@ export const RiskGraph: React.FC = () => {
 
                   let fill = '#0f172a';
                   if (node.is_center) fill = '#2563eb';
-                  else if (node.is_suspicious) fill = '#b91c1c';
+                  else if (node.is_suspicious) fill = '#dc2626';
                   else if (node.type === 'terminal') fill = '#d97706';
 
                   const isSelected = selectedNode?.id === node.id;
@@ -255,7 +250,7 @@ export const RiskGraph: React.FC = () => {
                         y={y + 19}
                         textAnchor="middle"
                         fill="#475569"
-                        fontSize="10"
+                        fontSize="11"
                         fontFamily="JetBrains Mono"
                         fontWeight={node.is_center ? 'bold' : 'normal'}
                       >
@@ -266,16 +261,16 @@ export const RiskGraph: React.FC = () => {
                 })}
               </svg>
             ) : (
-              <EmptyState title="No Connections Found" description="Try increasing the hop depth or querying a different entity ID." />
+              <EmptyState title="No Graph Data Found" description="Try querying a different entity ID or adjusting depth." />
             )}
           </div>
         </div>
 
-        {/* Inspector Side-Panel */}
-        <div className="lg:col-span-4 space-y-6 font-mono text-xs bg-surface border border-surface-border p-4">
+        {/* Inspector Panel */}
+        <div className="lg:col-span-4 bg-white border border-surface-border rounded-lg shadow-subtle p-5 space-y-6 font-mono text-xs">
           <div className="border-b border-surface-border pb-3">
-            <h2 className="text-xs font-mono uppercase tracking-widest text-ink font-semibold">
-              Selected entity details
+            <h2 className="text-sm font-semibold text-ink">
+              Selected Entity Inspector
             </h2>
           </div>
 
@@ -294,16 +289,16 @@ export const RiskGraph: React.FC = () => {
                 </div>
                 <div className="flex justify-between items-baseline">
                   <span className="text-ink-muted">Neighborhood risk:</span>
-                  <span className={`font-bold ${selectedNode.is_suspicious ? 'text-risk-critical' : 'text-risk-low'}`}>
+                  <span className={`font-bold ${selectedNode.is_suspicious ? 'text-red-600' : 'text-emerald-600'}`}>
                     {selectedNode.is_suspicious ? 'ELEVATED RISK' : 'CLEAN PROFILE'}
                   </span>
                 </div>
               </div>
 
-              {/* Connected Relationships Table */}
+              {/* Connected Relationships */}
               <div className="space-y-2 pt-3 border-t border-surface-border">
-                <div className="text-ink-muted uppercase text-[11px]">Connected peers (Click to pivot):</div>
-                <div className="space-y-1 max-h-52 overflow-y-auto">
+                <div className="text-ink-muted uppercase font-semibold text-[11px]">Connected Peers (Click to pivot):</div>
+                <div className="space-y-1.5 max-h-52 overflow-y-auto">
                   {graphData?.edges
                     .filter((e) => e.source === selectedNode.id || e.target === selectedNode.id)
                     .map((edge, idx) => {
@@ -312,10 +307,10 @@ export const RiskGraph: React.FC = () => {
                         <div
                           key={idx}
                           onClick={() => handlePivot(peerId)}
-                          className="flex justify-between items-center py-1.5 px-2 bg-background hover:bg-neutral-200 cursor-pointer transition border border-surface-border"
+                          className="flex justify-between items-center py-2 px-2.5 bg-slate-50 hover:bg-slate-100 cursor-pointer transition rounded border border-slate-200"
                         >
-                          <span className="text-ink font-medium hover:underline">{peerId}</span>
-                          <span className="text-ink-muted text-[11px]">{edge.weight} Authorizations</span>
+                          <span className="text-brand font-medium hover:underline">{peerId}</span>
+                          <span className="text-ink-muted text-[11px] font-numeric">{edge.weight} Txs</span>
                         </div>
                       );
                     })}

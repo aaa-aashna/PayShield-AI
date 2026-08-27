@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from 'recharts';
-import { ShieldAlert, Play, AlertTriangle, CheckCircle, Zap } from 'lucide-react';
+import { Play, ShieldAlert, Zap, AlertTriangle, CheckCircle } from 'lucide-react';
 import { RiskBadge } from '../components/common/RiskBadge';
 import { LoadingState } from '../components/common/LoadingState';
 import { api } from '../services/api';
@@ -61,37 +61,32 @@ export const AttackLab: React.FC = () => {
     })) || [];
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
       {/* 1. Header */}
-      <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
-          <div className="space-y-1">
-            <div className="text-[11px] font-mono uppercase tracking-widest text-ink-muted">
-              Adversarial Testing
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-ink">
-              Red Team attack simulation
-            </h1>
-            <p className="text-sm text-ink-secondary max-w-xl font-sans pt-1">
-              Controlled adversary scenarios evaluating model defenses, velocity barriers, and adaptive escalation.
-            </p>
-          </div>
-
-          <button
-            onClick={handleLaunchAttack}
-            disabled={isSimulating}
-            className="bg-ink hover:bg-neutral-800 text-white font-medium px-5 py-2.5 text-xs font-mono transition disabled:opacity-50 flex items-center gap-2"
-          >
-            <Play className="w-3.5 h-3.5 fill-current" />
-            <span>{isSimulating ? 'Executing scenario...' : 'Execute attack sequence →'}</span>
-          </button>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-surface-border">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-ink">
+            Adversarial Attack Simulation Lab
+          </h1>
+          <p className="text-sm text-ink-secondary mt-1">
+            Controlled red-team simulation console evaluating model defenses, velocity barriers, and adaptive escalation.
+          </p>
         </div>
+
+        <button
+          onClick={handleLaunchAttack}
+          disabled={isSimulating}
+          className="bg-ink hover:bg-slate-800 text-white font-medium px-5 py-2.5 rounded-md text-xs font-mono transition disabled:opacity-50 flex items-center gap-2 shadow-subtle"
+        >
+          <Play className="w-4 h-4 fill-current" />
+          <span>{isSimulating ? 'Executing Scenario...' : 'Execute Attack Scenario →'}</span>
+        </button>
       </div>
 
       {/* 2. Scenario Selection Cards */}
       <div className="space-y-3">
-        <h2 className="text-xs font-mono uppercase tracking-widest text-ink font-semibold">
-          Select attack vector
+        <h2 className="text-sm font-semibold text-ink">
+          Select Adversary Scenario
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -101,10 +96,10 @@ export const AttackLab: React.FC = () => {
               <div
                 key={sc.name}
                 onClick={() => setAttackType(sc.name)}
-                className={`p-3.5 border transition cursor-pointer space-y-1.5 ${
+                className={`p-4 rounded-lg border transition cursor-pointer space-y-2 ${
                   isSelected
-                    ? 'border-ink bg-neutral-100 shadow-sm'
-                    : 'border-surface-border bg-surface hover:bg-neutral-50'
+                    ? 'border-brand bg-sky-50/50 shadow-subtle ring-1 ring-brand/30'
+                    : 'border-surface-border bg-white hover:bg-slate-50 shadow-subtle'
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -112,10 +107,10 @@ export const AttackLab: React.FC = () => {
                     {sc.name}
                   </span>
                   {isSelected && (
-                    <span className="w-2 h-2 rounded-full bg-ink" />
+                    <span className="w-2 h-2 rounded-full bg-brand" />
                   )}
                 </div>
-                <p className="text-[11px] text-ink-secondary leading-snug font-sans">
+                <p className="text-xs text-ink-secondary leading-relaxed font-sans">
                   {sc.desc}
                 </p>
               </div>
@@ -125,9 +120,9 @@ export const AttackLab: React.FC = () => {
       </div>
 
       {/* 3. Parameter Controls */}
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 p-4 bg-surface border border-surface-border font-mono text-xs">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 p-5 bg-white border border-surface-border rounded-lg shadow-subtle font-mono text-xs">
         <div>
-          <label className="block text-ink-muted text-[11px] mb-1">Attack intensity: {intensity.toFixed(1)}</label>
+          <label className="block text-ink-muted text-[11px] font-semibold mb-1">Attack Intensity: {intensity.toFixed(1)}</label>
           <input
             type="range"
             min="0.1"
@@ -135,39 +130,39 @@ export const AttackLab: React.FC = () => {
             step="0.1"
             value={intensity}
             onChange={(e) => setIntensity(Number(e.target.value))}
-            className="w-full accent-ink"
+            className="w-full accent-brand"
           />
         </div>
 
         <div>
-          <label className="block text-ink-muted text-[11px] mb-1">Transaction count</label>
+          <label className="block text-ink-muted text-[11px] font-semibold mb-1">Transaction Count</label>
           <input
             type="number"
             min="2"
             max="10"
             value={txCount}
             onChange={(e) => setTxCount(Number(e.target.value))}
-            className="w-full bg-background border border-surface-border px-2.5 py-1.5 text-ink focus:border-ink outline-none"
+            className="w-full bg-slate-50 border border-surface-border rounded px-3 py-2 text-ink focus:border-brand outline-none"
           />
         </div>
 
         <div>
-          <label className="block text-ink-muted text-[11px] mb-1">Target customer ID</label>
+          <label className="block text-ink-muted text-[11px] font-semibold mb-1">Target Customer ID</label>
           <input
             type="text"
             value={customerId}
             onChange={(e) => setCustomerId(e.target.value)}
-            className="w-full bg-background border border-surface-border px-2.5 py-1.5 text-ink focus:border-ink outline-none"
+            className="w-full bg-slate-50 border border-surface-border rounded px-3 py-2 text-ink focus:border-brand outline-none"
           />
         </div>
 
         <div>
-          <label className="block text-ink-muted text-[11px] mb-1">Target terminal ID</label>
+          <label className="block text-ink-muted text-[11px] font-semibold mb-1">Target Terminal ID</label>
           <input
             type="text"
             value={terminalId}
             onChange={(e) => setTerminalId(e.target.value)}
-            className="w-full bg-background border border-surface-border px-2.5 py-1.5 text-ink focus:border-ink outline-none"
+            className="w-full bg-slate-50 border border-surface-border rounded px-3 py-2 text-ink focus:border-brand outline-none"
           />
         </div>
       </div>
@@ -175,108 +170,116 @@ export const AttackLab: React.FC = () => {
       {/* 4. Results & Escalation Response */}
       {simResult && (
         <div className="space-y-6 pt-4 border-t border-surface-border">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono">
-            <div className="p-3.5 bg-surface border border-surface-border">
-              <div className="text-[11px] uppercase tracking-wider text-ink-muted">Defense outcome</div>
-              <div className="text-2xl font-bold text-risk-critical mt-0.5">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
+            <div className="bg-white border border-surface-border p-4 rounded-lg shadow-subtle">
+              <div className="text-[11px] uppercase tracking-wider text-ink-muted">Defense Outcome</div>
+              <div className="text-2xl font-bold text-risk-critical mt-1">
                 {simResult.detected ? 'DETECTED' : 'EVADED'}
               </div>
-              <div className="text-[11px] text-ink-secondary">Caught at Step #{simResult.detection_step || 1}</div>
+              <div className="text-xs text-ink-secondary">Caught at Step #{simResult.detection_step || 1}</div>
             </div>
 
-            <div className="p-3.5 bg-surface border border-surface-border">
-              <div className="text-[11px] uppercase tracking-wider text-ink-muted">Enforced mitigation</div>
-              <div className="text-2xl font-bold text-ink mt-0.5">
+            <div className="bg-white border border-surface-border p-4 rounded-lg shadow-subtle">
+              <div className="text-[11px] uppercase tracking-wider text-ink-muted">Enforced Mitigation</div>
+              <div className="text-2xl font-bold text-ink mt-1">
                 {simResult.blocked ? 'HARD BLOCK' : 'MFA CHALLENGE'}
               </div>
-              <div className="text-[11px] text-ink-secondary">Automated action</div>
+              <div className="text-xs text-ink-secondary">Automated policy execution</div>
             </div>
 
-            <div className="p-3.5 bg-surface border border-surface-border">
-              <div className="text-[11px] uppercase tracking-wider text-ink-muted">Peak risk score</div>
-              <div className="text-2xl font-bold text-ink mt-0.5">
+            <div className="bg-white border border-surface-border p-4 rounded-lg shadow-subtle">
+              <div className="text-[11px] uppercase tracking-wider text-ink-muted">Peak Risk Score</div>
+              <div className="text-2xl font-bold text-ink mt-1 font-numeric">
                 {simResult.max_risk_score.toFixed(1)} <span className="text-xs text-ink-muted font-normal">/ 100</span>
               </div>
-              <div className="text-[11px] text-ink-secondary">Adaptive peak</div>
+              <div className="text-xs text-ink-secondary">Adaptive maxima reached</div>
             </div>
 
-            <div className="p-3.5 bg-surface border border-surface-border">
-              <div className="text-[11px] uppercase tracking-wider text-ink-muted">Alerts generated</div>
-              <div className="text-2xl font-bold text-ink mt-0.5">
+            <div className="bg-white border border-surface-border p-4 rounded-lg shadow-subtle">
+              <div className="text-[11px] uppercase tracking-wider text-ink-muted">Security Alerts</div>
+              <div className="text-2xl font-bold text-ink mt-1 font-numeric">
                 {simResult.alerts_count} <span className="text-xs text-ink-muted font-normal">/ {simResult.total_transactions} txs</span>
               </div>
-              <div className="text-[11px] text-ink-secondary">Security events</div>
+              <div className="text-xs text-ink-secondary">Triage incidents emitted</div>
             </div>
           </div>
 
           {/* Risk Progression Chart */}
-          <div className="space-y-3 bg-surface border border-surface-border p-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-xs font-mono uppercase tracking-widest text-ink font-semibold">
-                Risk progression curve (Steps $T_1 \to T_n$)
-              </h2>
-              <span className="text-[11px] font-mono text-risk-critical">Block Threshold: 80.0</span>
+          <div className="bg-white border border-surface-border rounded-lg shadow-subtle p-5 space-y-3">
+            <div className="flex items-center justify-between border-b border-surface-border pb-3">
+              <div>
+                <h2 className="text-sm font-semibold text-ink">
+                  Risk Progression Curve (Steps $T_1 \to T_n$)
+                </h2>
+                <p className="text-xs text-ink-secondary">
+                  Real-time risk score escalation across sequential adversary transactions.
+                </p>
+              </div>
+              <span className="text-xs font-mono text-red-600 font-semibold">Block Threshold: 80.0</span>
             </div>
 
             <div className="h-56 w-full pt-2">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData} margin={{ top: 10, right: 15, left: -20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="2 2" stroke="#f0f0ed" vertical={false} />
-                  <XAxis dataKey="step" stroke="#8e99a8" fontSize={10} fontStyle="JetBrains Mono" />
-                  <YAxis stroke="#8e99a8" domain={[0, 100]} fontSize={10} fontStyle="JetBrains Mono" />
+                  <CartesianGrid strokeDasharray="2 2" stroke="#f1f5f9" vertical={false} />
+                  <XAxis dataKey="step" stroke="#94a3b8" fontSize={11} fontStyle="JetBrains Mono" />
+                  <YAxis stroke="#94a3b8" domain={[0, 100]} fontSize={11} fontStyle="JetBrains Mono" />
                   <Tooltip
                     contentStyle={{
                       backgroundColor: '#ffffff',
-                      borderColor: '#e6e6e2',
-                      fontSize: '11px',
+                      borderColor: '#e2e8f0',
+                      fontSize: '12px',
                       fontFamily: 'JetBrains Mono',
+                      borderRadius: '6px',
                     }}
                   />
-                  <ReferenceLine y={80} stroke="#b91c1c" strokeDasharray="3 3" strokeWidth={1} />
-                  <Line type="monotone" dataKey="risk_score" stroke="#b91c1c" strokeWidth={2} dot={{ r: 3.5, fill: '#b91c1c' }} />
+                  <ReferenceLine y={80} stroke="#dc2626" strokeDasharray="3 3" strokeWidth={1.5} />
+                  <Line type="monotone" dataKey="risk_score" stroke="#dc2626" strokeWidth={2} dot={{ r: 4, fill: '#dc2626' }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           </div>
 
           {/* Execution Log Table */}
-          <div className="overflow-x-auto bg-surface border border-surface-border">
-            <table className="w-full text-left text-xs font-mono">
-              <thead className="text-[11px] uppercase text-ink-muted border-b border-surface-border bg-background">
-                <tr>
-                  <th className="py-2.5 px-3">Step</th>
-                  <th className="py-2.5 px-3">Transaction ID</th>
-                  <th className="py-2.5 px-3 text-right">Amount</th>
-                  <th className="py-2.5 px-3 text-center">Fraud prob</th>
-                  <th className="py-2.5 px-3 text-center">Anomaly</th>
-                  <th className="py-2.5 px-3 text-center">Risk score</th>
-                  <th className="py-2.5 px-3">Risk level</th>
-                  <th className="py-2.5 px-3">Decision</th>
-                  <th className="py-2.5 px-3 text-right">Adaptive status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-surface-border text-[11px]">
-                {simResult.step_logs.map((step) => (
-                  <tr key={step.step_number} className="hover:bg-neutral-50 transition">
-                    <td className="py-2.5 px-3 font-semibold text-ink-muted">#{step.step_number}</td>
-                    <td className="py-2.5 px-3 font-semibold text-ink">{step.transaction_id}</td>
-                    <td className="py-2.5 px-3 text-right font-bold text-ink">${step.tx_amount.toFixed(2)}</td>
-                    <td className="py-2.5 px-3 text-center text-ink-secondary">{(step.fraud_probability * 100).toFixed(1)}%</td>
-                    <td className="py-2.5 px-3 text-center text-ink-secondary">{step.anomaly_score.toFixed(2)}</td>
-                    <td className="py-2.5 px-3 text-center font-bold text-risk-critical">{step.risk_score.toFixed(1)}</td>
-                    <td className="py-2.5 px-3">
-                      <RiskBadge level={step.risk_level} size="sm" />
-                    </td>
-                    <td className="py-2.5 px-3">
-                      <RiskBadge decision={step.decision} size="sm" />
-                    </td>
-                    <td className="py-2.5 px-3 text-right text-risk-high font-semibold">
-                      {step.is_escalated ? '⚡ Escalated' : '—'}
-                    </td>
+          <div className="bg-white border border-surface-border rounded-lg shadow-subtle overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs font-mono">
+                <thead className="text-[11px] uppercase tracking-wider text-ink-muted bg-slate-50 border-b border-surface-border">
+                  <tr>
+                    <th className="py-3 px-3.5">Step</th>
+                    <th className="py-3 px-3.5">Transaction ID</th>
+                    <th className="py-3 px-3.5 text-right">Amount</th>
+                    <th className="py-3 px-3.5 text-center">Fraud Prob</th>
+                    <th className="py-3 px-3.5 text-center">Anomaly</th>
+                    <th className="py-3 px-3.5 text-center">Risk Score</th>
+                    <th className="py-3 px-3.5">Risk Level</th>
+                    <th className="py-3 px-3.5">Decision</th>
+                    <th className="py-3 px-3.5 text-right">Adaptive Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-surface-border text-xs">
+                  {simResult.step_logs.map((step) => (
+                    <tr key={step.step_number} className="hover:bg-slate-50 transition">
+                      <td className="py-3.5 px-3.5 font-bold text-ink-muted">#{step.step_number}</td>
+                      <td className="py-3.5 px-3.5 font-bold text-ink">{step.transaction_id}</td>
+                      <td className="py-3.5 px-3.5 text-right font-bold text-ink font-numeric">${step.tx_amount.toFixed(2)}</td>
+                      <td className="py-3.5 px-3.5 text-center text-ink-secondary font-numeric">{(step.fraud_probability * 100).toFixed(1)}%</td>
+                      <td className="py-3.5 px-3.5 text-center text-ink-secondary font-numeric">{step.anomaly_score.toFixed(2)}</td>
+                      <td className="py-3.5 px-3.5 text-center font-bold text-red-600 font-numeric">{step.risk_score.toFixed(1)}</td>
+                      <td className="py-3.5 px-3.5">
+                        <RiskBadge level={step.risk_level} size="sm" />
+                      </td>
+                      <td className="py-3.5 px-3.5">
+                        <RiskBadge decision={step.decision} size="sm" />
+                      </td>
+                      <td className="py-3.5 px-3.5 text-right text-orange-700 font-bold">
+                        {step.is_escalated ? '⚡ Escalated' : '—'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}

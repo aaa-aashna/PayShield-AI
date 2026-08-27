@@ -25,109 +25,107 @@ export const Monitoring: React.FC = () => {
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10 space-y-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
       {/* 1. Header */}
-      <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
-          <div className="space-y-1">
-            <div className="text-[11px] font-mono uppercase tracking-widest text-ink-muted">
-              Stability Telemetry
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-ink">
-              Feature drift & stability monitoring
-            </h1>
-            <p className="text-sm text-ink-secondary max-w-xl font-sans pt-1">
-              Population Stability Index (PSI) and Kolmogorov-Smirnov (KS) statistical drift tracking across production splits.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 font-mono text-xs text-ink-muted">
-            <span>Monitoring frequency:</span>
-            <span className="font-semibold text-ink bg-surface border border-surface-border px-2.5 py-1">
-              Continuous Sliding Batch
-            </span>
-          </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-surface-border">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-ink">
+            Feature Drift & Population Stability Monitoring
+          </h1>
+          <p className="text-sm text-ink-secondary mt-1">
+            Continuous Population Stability Index (PSI) and Kolmogorov-Smirnov (KS) statistical drift tracking across production batches.
+          </p>
         </div>
 
-        {/* Metric Strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-surface-border font-mono">
-          <div className="p-3.5 bg-surface border border-surface-border">
-            <div className="text-[11px] uppercase tracking-wider text-ink-muted">Overall drift status</div>
-            <div className="text-2xl sm:text-3xl font-bold text-risk-low mt-0.5">{drift?.overall_status || 'STABLE'}</div>
-            <div className="text-[11px] text-ink-secondary">PSI &lt; 0.10 threshold</div>
-          </div>
-          <div className="p-3.5 bg-surface border border-surface-border">
-            <div className="text-[11px] uppercase tracking-wider text-ink-muted">Stable features</div>
-            <div className="text-2xl sm:text-3xl font-bold text-ink mt-0.5">
-              {drift?.summary.STABLE || 51} <span className="text-sm text-ink-muted font-normal">/ 52</span>
-            </div>
-            <div className="text-[11px] text-ink-secondary">98.1% baseline alignment</div>
-          </div>
-          <div className="p-3.5 bg-surface border border-surface-border">
-            <div className="text-[11px] uppercase tracking-wider text-ink-muted">Prediction PSI</div>
-            <div className="text-2xl sm:text-3xl font-bold text-risk-low mt-0.5">
-              {drift?.prediction_drift?.psi_value?.toFixed(4) || '0.0241'}
-            </div>
-            <div className="text-[11px] text-ink-secondary">Zero concept shift</div>
-          </div>
-          <div className="p-3.5 bg-surface border border-surface-border">
-            <div className="text-[11px] uppercase tracking-wider text-ink-muted">Target evaluation window</div>
-            <div className="text-2xl sm:text-3xl font-bold text-ink mt-0.5">Sep 2018</div>
-            <div className="text-[11px] text-ink-secondary">Chronological test split</div>
-          </div>
+        <div className="flex items-center gap-2 text-xs font-mono text-ink-muted">
+          <span>Cadence:</span>
+          <span className="font-semibold text-ink bg-white border border-surface-border px-3 py-1.5 rounded-md shadow-subtle">
+            Continuous Sliding Batch
+          </span>
         </div>
       </div>
 
-      {/* 2. Feature PSI Telemetry Table */}
-      <div className="space-y-3">
-        <div className="flex items-baseline justify-between">
-          <div>
-            <h2 className="text-xs font-mono uppercase tracking-widest text-ink font-semibold">
-              Feature population stability index (Baseline vs Test)
-            </h2>
-            <p className="text-[11px] font-sans text-ink-secondary pt-0.5">
-              Statistical divergence between training baseline (Apr–Aug) and live holdout test (Sep).
-            </p>
-          </div>
-          <span className="text-[11px] font-mono text-ink-muted">PSI Threshold: Stable &lt; 0.10 · Warning &lt; 0.25</span>
+      {/* 2. Metric KPI Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
+        <div className="bg-white border border-surface-border p-4 rounded-lg shadow-subtle space-y-1">
+          <div className="text-[11px] uppercase tracking-wider text-ink-muted">Overall Drift Status</div>
+          <div className="text-2xl sm:text-3xl font-bold text-risk-low mt-0.5">{drift?.overall_status || 'STABLE'}</div>
+          <div className="text-xs text-ink-secondary">PSI &lt; 0.10 stable threshold</div>
         </div>
 
-        <div className="overflow-x-auto bg-surface border border-surface-border">
+        <div className="bg-white border border-surface-border p-4 rounded-lg shadow-subtle space-y-1">
+          <div className="text-[11px] uppercase tracking-wider text-ink-muted">Stable Features</div>
+          <div className="text-2xl sm:text-3xl font-bold text-ink mt-0.5 font-numeric">
+            {drift?.summary.STABLE || 51} <span className="text-xs text-ink-muted font-normal">/ 52</span>
+          </div>
+          <div className="text-xs text-ink-secondary">98.1% baseline alignment</div>
+        </div>
+
+        <div className="bg-white border border-surface-border p-4 rounded-lg shadow-subtle space-y-1">
+          <div className="text-[11px] uppercase tracking-wider text-ink-muted">Prediction PSI</div>
+          <div className="text-2xl sm:text-3xl font-bold text-risk-low mt-0.5 font-numeric">
+            {drift?.prediction_drift?.psi_value?.toFixed(4) || '0.0241'}
+          </div>
+          <div className="text-xs text-risk-low font-medium">Zero concept shift</div>
+        </div>
+
+        <div className="bg-white border border-surface-border p-4 rounded-lg shadow-subtle space-y-1">
+          <div className="text-[11px] uppercase tracking-wider text-ink-muted">Holdout Test Period</div>
+          <div className="text-2xl sm:text-3xl font-bold text-ink mt-0.5">Sep 2018</div>
+          <div className="text-xs text-ink-secondary">Chronological holdout split</div>
+        </div>
+      </div>
+
+      {/* 3. Feature PSI Telemetry Table */}
+      <div className="bg-white border border-surface-border rounded-lg shadow-subtle overflow-hidden">
+        <div className="p-4 border-b border-surface-border flex items-center justify-between">
+          <div>
+            <h2 className="text-sm font-semibold text-ink">
+              Feature Population Stability Index (Baseline vs Test Split)
+            </h2>
+            <p className="text-xs text-ink-secondary">
+              Statistical divergence between training baseline (Apr–Aug) and live test stream (Sep).
+            </p>
+          </div>
+          <span className="text-xs font-mono text-ink-muted">PSI Thresholds: Stable &lt; 0.10 · Warning &lt; 0.25</span>
+        </div>
+
+        <div className="overflow-x-auto">
           {loading ? (
             <LoadingState message="Computing statistical drift metrics..." className="py-16" />
           ) : (
             <table className="w-full text-left text-xs font-mono">
-              <thead className="text-[11px] uppercase text-ink-muted border-b border-surface-border bg-background">
+              <thead className="text-[11px] uppercase tracking-wider text-ink-muted bg-slate-50 border-b border-surface-border">
                 <tr>
-                  <th className="py-3 px-3">Feature name</th>
-                  <th className="py-3 px-3 text-center">PSI value</th>
-                  <th className="py-3 px-3 text-center">KS statistic</th>
-                  <th className="py-3 px-3 text-center">KS p-value</th>
-                  <th className="py-3 px-3 text-center">Baseline mean</th>
-                  <th className="py-3 px-3 text-center">Target mean</th>
-                  <th className="py-3 px-3 text-right">Drift health</th>
+                  <th className="py-3 px-3.5">Feature Name</th>
+                  <th className="py-3 px-3.5 text-center">PSI Value</th>
+                  <th className="py-3 px-3.5 text-center">KS Statistic</th>
+                  <th className="py-3 px-3.5 text-center">KS p-Value</th>
+                  <th className="py-3 px-3.5 text-center">Baseline Mean</th>
+                  <th className="py-3 px-3.5 text-center">Target Mean</th>
+                  <th className="py-3 px-3.5 text-right">Drift Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-surface-border text-[11px]">
+              <tbody className="divide-y divide-surface-border text-xs">
                 {drift?.features.map((feat) => {
                   const isStable = feat.status === 'STABLE';
                   return (
-                    <tr key={feat.metric_name} className="hover:bg-neutral-50 transition">
-                      <td className="py-3 px-3 font-semibold text-ink">{feat.metric_name}</td>
-                      <td className="py-3 px-3 text-center font-bold text-ink">
+                    <tr key={feat.metric_name} className="hover:bg-slate-50 transition">
+                      <td className="py-3.5 px-3.5 font-bold text-ink">{feat.metric_name}</td>
+                      <td className="py-3.5 px-3.5 text-center font-bold text-ink font-numeric">
                         {feat.psi_value.toFixed(4)}
                       </td>
-                      <td className="py-3 px-3 text-center text-ink-secondary">{feat.ks_statistic.toFixed(3)}</td>
-                      <td className="py-3 px-3 text-center text-ink-secondary">{feat.ks_p_value.toFixed(2)}</td>
-                      <td className="py-3 px-3 text-center text-ink-secondary">{feat.baseline_mean.toFixed(2)}</td>
-                      <td className="py-3 px-3 text-center text-ink-secondary">{feat.target_mean.toFixed(2)}</td>
-                      <td className="py-3 px-3 text-right">
-                        <span className={`inline-flex items-center gap-1.5 font-mono text-[10px] px-2 py-0.5 border ${
+                      <td className="py-3.5 px-3.5 text-center text-ink-secondary font-numeric">{feat.ks_statistic.toFixed(3)}</td>
+                      <td className="py-3.5 px-3.5 text-center text-ink-secondary font-numeric">{feat.ks_p_value.toFixed(2)}</td>
+                      <td className="py-3.5 px-3.5 text-center text-ink-secondary font-numeric">{feat.baseline_mean.toFixed(2)}</td>
+                      <td className="py-3.5 px-3.5 text-center text-ink-secondary font-numeric">{feat.target_mean.toFixed(2)}</td>
+                      <td className="py-3.5 px-3.5 text-right">
+                        <span className={`inline-flex items-center gap-1.5 font-mono text-[11px] px-2.5 py-0.5 rounded border ${
                           isStable
-                            ? 'text-risk-low bg-emerald-50/80 border-emerald-200/80'
-                            : 'text-risk-high bg-orange-50/80 border-orange-200/80 font-bold'
+                            ? 'text-emerald-700 bg-emerald-50 border-emerald-200 font-medium'
+                            : 'text-orange-700 bg-orange-50 border-orange-200 font-bold'
                         }`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${isStable ? 'bg-risk-low' : 'bg-risk-high'}`} />
+                          <span className={`w-1.5 h-1.5 rounded-full ${isStable ? 'bg-emerald-600' : 'bg-orange-600'}`} />
                           <span>{feat.status}</span>
                         </span>
                       </td>

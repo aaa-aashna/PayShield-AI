@@ -51,99 +51,97 @@ export const ModelIntelligence: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10 space-y-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
       {/* 1. Header */}
-      <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
-          <div className="space-y-1">
-            <div className="text-[11px] font-mono uppercase tracking-widest text-ink-muted">
-              Model Governance
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-ink">
-              Model intelligence & benchmarking
-            </h1>
-            <p className="text-sm text-ink-secondary max-w-xl font-sans pt-1">
-              Empirical evaluation across primary streaming datasets and independent external benchmarks.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 font-mono text-xs text-ink-muted">
-            <span>Primary architecture:</span>
-            <span className="font-semibold text-ink bg-surface border border-surface-border px-2.5 py-1">
-              HistGB Champion v1.0.0
-            </span>
-          </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-surface-border">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-ink">
+            Model Intelligence & Benchmarking
+          </h1>
+          <p className="text-sm text-ink-secondary mt-1">
+            Empirical evaluation across primary streaming datasets and independent external validation benchmarks.
+          </p>
         </div>
 
-        {/* Metric Strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-surface-border font-mono">
-          <div className="p-3.5 bg-surface border border-surface-border">
-            <div className="text-[11px] uppercase tracking-wider text-ink-muted">Test PR-AUC</div>
-            <div className="text-2xl sm:text-3xl font-bold text-risk-low mt-0.5">0.3526</div>
-            <div className="text-[11px] text-ink-secondary">+257% vs baseline</div>
-          </div>
-          <div className="p-3.5 bg-surface border border-surface-border">
-            <div className="text-[11px] uppercase tracking-wider text-ink-muted">Test ROC-AUC</div>
-            <div className="text-2xl sm:text-3xl font-bold text-ink mt-0.5">0.8516</div>
-            <div className="text-[11px] text-ink-secondary">Discriminative area</div>
-          </div>
-          <div className="p-3.5 bg-surface border border-surface-border">
-            <div className="text-[11px] uppercase tracking-wider text-ink-muted">Operating threshold</div>
-            <div className="text-2xl sm:text-3xl font-bold text-ink mt-0.5">0.757</div>
-            <div className="text-[11px] text-ink-secondary">Optimal F1 (0.4189)</div>
-          </div>
-          <div className="p-3.5 bg-surface border border-surface-border">
-            <div className="text-[11px] uppercase tracking-wider text-ink-muted">Feature pipeline</div>
-            <div className="text-2xl sm:text-3xl font-bold text-ink mt-0.5">52</div>
-            <div className="text-[11px] text-ink-secondary">Leakage-safe signals</div>
-          </div>
+        <div className="flex items-center gap-2 text-xs font-mono text-ink-muted">
+          <span>Champion architecture:</span>
+          <span className="font-semibold text-ink bg-white border border-surface-border px-3 py-1.5 rounded-md shadow-subtle">
+            HistGradientBoosting v1.0.0
+          </span>
         </div>
       </div>
 
-      {/* 2. Primary Dataset Benchmark Table */}
-      <div className="space-y-3">
-        <div className="flex items-baseline justify-between">
+      {/* 2. Metric KPI Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
+        <div className="bg-white border border-surface-border p-4 rounded-lg shadow-subtle space-y-1">
+          <div className="text-[11px] uppercase tracking-wider text-ink-muted">Primary Test PR-AUC</div>
+          <div className="text-2xl sm:text-3xl font-bold text-risk-low mt-0.5 font-numeric">0.3526</div>
+          <div className="text-xs text-ink-secondary">+257% over baseline (0.0986)</div>
+        </div>
+
+        <div className="bg-white border border-surface-border p-4 rounded-lg shadow-subtle space-y-1">
+          <div className="text-[11px] uppercase tracking-wider text-ink-muted">Primary Test ROC-AUC</div>
+          <div className="text-2xl sm:text-3xl font-bold text-ink mt-0.5 font-numeric">0.8516</div>
+          <div className="text-xs text-ink-secondary">Discriminative area under curve</div>
+        </div>
+
+        <div className="bg-white border border-surface-border p-4 rounded-lg shadow-subtle space-y-1">
+          <div className="text-[11px] uppercase tracking-wider text-ink-muted">Operating Threshold</div>
+          <div className="text-2xl sm:text-3xl font-bold text-ink mt-0.5 font-numeric">0.757</div>
+          <div className="text-xs text-ink-secondary">Optimal F1 score (0.4189)</div>
+        </div>
+
+        <div className="bg-white border border-surface-border p-4 rounded-lg shadow-subtle space-y-1">
+          <div className="text-[11px] uppercase tracking-wider text-ink-muted">Leakage-Safe Features</div>
+          <div className="text-2xl sm:text-3xl font-bold text-ink mt-0.5 font-numeric">52</div>
+          <div className="text-xs text-ink-secondary">Behavioral, terminal, temporal, graph</div>
+        </div>
+      </div>
+
+      {/* 3. Primary Dataset Benchmark Table */}
+      <div className="bg-white border border-surface-border rounded-lg shadow-subtle overflow-hidden">
+        <div className="p-4 border-b border-surface-border flex items-center justify-between">
           <div>
-            <h2 className="text-xs font-mono uppercase tracking-widest text-ink font-semibold">
-              Primary dataset performance (PayShield stream · 1.75M transactions)
+            <h2 className="text-sm font-semibold text-ink">
+              Primary Dataset Performance (PayShield Stream · 1.75M Transactions)
             </h2>
-            <p className="text-[11px] font-sans text-ink-secondary pt-0.5">
+            <p className="text-xs text-ink-secondary">
               Evaluated on unseen chronological holdout test split (263,124 transactions · 0.837% fraud rate).
             </p>
           </div>
-          <span className="text-[11px] font-mono text-ink-muted">70/15/15 Chronological Split</span>
+          <span className="text-xs font-mono text-ink-muted">70/15/15 Chronological Split</span>
         </div>
 
-        <div className="overflow-x-auto bg-surface border border-surface-border">
+        <div className="overflow-x-auto">
           <table className="w-full text-left text-xs font-mono">
-            <thead className="text-[11px] uppercase text-ink-muted border-b border-surface-border bg-background">
+            <thead className="text-[11px] uppercase tracking-wider text-ink-muted bg-slate-50 border-b border-surface-border">
               <tr>
-                <th className="py-2.5 px-3">Architecture</th>
-                <th className="py-2.5 px-3 text-center">PR-AUC</th>
-                <th className="py-2.5 px-3 text-center">ROC-AUC</th>
-                <th className="py-2.5 px-3 text-center">Precision</th>
-                <th className="py-2.5 px-3 text-center">Recall</th>
-                <th className="py-2.5 px-3 text-center">F1 score</th>
-                <th className="py-2.5 px-3 text-right">Training time</th>
+                <th className="py-3 px-3.5">Model Architecture</th>
+                <th className="py-3 px-3.5 text-center">PR-AUC</th>
+                <th className="py-3 px-3.5 text-center">ROC-AUC</th>
+                <th className="py-3 px-3.5 text-center">Precision</th>
+                <th className="py-3 px-3.5 text-center">Recall</th>
+                <th className="py-3 px-3.5 text-center">F1 Score</th>
+                <th className="py-3 px-3.5 text-right">Training Time</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-surface-border text-[11px]">
+            <tbody className="divide-y divide-surface-border text-xs">
               {comparison.map((m) => {
                 const isChampion = m.model_name.includes('Champion');
                 return (
-                  <tr key={m.model_name} className={isChampion ? 'font-semibold text-ink bg-neutral-50/50' : 'text-ink-secondary'}>
-                    <td className="py-3 px-3">
+                  <tr key={m.model_name} className={isChampion ? 'font-semibold text-ink bg-slate-50/70' : 'text-ink-secondary'}>
+                    <td className="py-3.5 px-3.5">
                       <span>{m.model_name}</span>
-                      {isChampion && <span className="text-[10px] text-risk-low uppercase ml-2 font-bold">(Champion)</span>}
+                      {isChampion && <span className="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded uppercase ml-2 font-bold">(Champion)</span>}
                     </td>
-                    <td className={`py-3 px-3 text-center ${isChampion ? 'text-risk-low font-bold' : ''}`}>
+                    <td className={`py-3.5 px-3.5 text-center font-numeric ${isChampion ? 'text-emerald-700 font-bold' : ''}`}>
                       {m.test_pr_auc.toFixed(4)}
                     </td>
-                    <td className="py-3 px-3 text-center font-bold text-ink">{m.test_roc_auc.toFixed(4)}</td>
-                    <td className="py-3 px-3 text-center">{(m.test_precision * 100).toFixed(1)}%</td>
-                    <td className="py-3 px-3 text-center">{(m.test_recall * 100).toFixed(1)}%</td>
-                    <td className="py-3 px-3 text-center font-bold text-ink">{m.test_f1.toFixed(4)}</td>
-                    <td className="py-3 px-3 text-right text-ink-muted">{m.fit_time_seconds}s</td>
+                    <td className="py-3.5 px-3.5 text-center font-bold text-ink font-numeric">{m.test_roc_auc.toFixed(4)}</td>
+                    <td className="py-3.5 px-3.5 text-center font-numeric">{(m.test_precision * 100).toFixed(1)}%</td>
+                    <td className="py-3.5 px-3.5 text-center font-numeric">{(m.test_recall * 100).toFixed(1)}%</td>
+                    <td className="py-3.5 px-3.5 text-center font-bold text-ink font-numeric">{m.test_f1.toFixed(4)}</td>
+                    <td className="py-3.5 px-3.5 text-right text-ink-muted font-numeric">{m.fit_time_seconds}s</td>
                   </tr>
                 );
               })}
@@ -152,15 +150,15 @@ export const ModelIntelligence: React.FC = () => {
         </div>
       </div>
 
-      {/* 3. External Kaggle Validation Benchmark Table */}
+      {/* 4. External Kaggle Validation Benchmark Table */}
       {externalBenchmark && (
-        <div className="space-y-3 pt-2">
-          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
+        <div className="bg-white border border-surface-border rounded-lg shadow-subtle overflow-hidden">
+          <div className="p-4 border-b border-surface-border flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <h2 className="text-xs font-mono uppercase tracking-widest text-ink font-semibold">
-                External validation benchmark ({externalBenchmark.external_validation_dataset.name})
+              <h2 className="text-sm font-semibold text-ink">
+                External Validation Benchmark ({externalBenchmark.external_validation_dataset.name})
               </h2>
-              <p className="text-[11px] font-sans text-ink-secondary pt-0.5">
+              <p className="text-xs text-ink-secondary">
                 Evaluated on independent Kaggle European cardholder transactions (284,807 records · 0.172% fraud rate · PCA anonymized).
               </p>
             </div>
@@ -168,43 +166,43 @@ export const ModelIntelligence: React.FC = () => {
               href={externalBenchmark.external_validation_dataset.source_url}
               target="_blank"
               rel="noreferrer"
-              className="text-[11px] font-mono text-ink hover:underline inline-flex items-center gap-1 shrink-0"
+              className="text-xs font-mono text-brand hover:underline inline-flex items-center gap-1 font-medium shrink-0"
             >
-              <span>Kaggle Source</span>
-              <ExternalLink className="w-3 h-3" />
+              <span>Kaggle Dataset Source</span>
+              <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>
 
-          <div className="overflow-x-auto bg-surface border border-surface-border">
+          <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-mono">
-              <thead className="text-[11px] uppercase text-ink-muted border-b border-surface-border bg-background">
+              <thead className="text-[11px] uppercase tracking-wider text-ink-muted bg-slate-50 border-b border-surface-border">
                 <tr>
-                  <th className="py-2.5 px-3">Model architecture on Kaggle benchmark</th>
-                  <th className="py-2.5 px-3 text-center">PR-AUC</th>
-                  <th className="py-2.5 px-3 text-center">ROC-AUC</th>
-                  <th className="py-2.5 px-3 text-center">Precision (opt)</th>
-                  <th className="py-2.5 px-3 text-center">Recall (opt)</th>
-                  <th className="py-2.5 px-3 text-center">F1 score</th>
-                  <th className="py-2.5 px-3 text-right">Fit time</th>
+                  <th className="py-3 px-3.5">Model Architecture on Kaggle Benchmark</th>
+                  <th className="py-3 px-3.5 text-center">PR-AUC</th>
+                  <th className="py-3 px-3.5 text-center">ROC-AUC</th>
+                  <th className="py-3 px-3.5 text-center">Precision (opt)</th>
+                  <th className="py-3 px-3.5 text-center">Recall (opt)</th>
+                  <th className="py-3 px-3.5 text-center">F1 Score</th>
+                  <th className="py-3 px-3.5 text-right">Training Time</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-surface-border text-[11px]">
+              <tbody className="divide-y divide-surface-border text-xs">
                 {externalBenchmark.external_validation_dataset.models.map((m) => {
                   const isChampion = m.model_name.includes('Champion');
                   return (
-                    <tr key={m.model_name} className={isChampion ? 'font-semibold text-ink bg-neutral-50/50' : 'text-ink-secondary'}>
-                      <td className="py-3 px-3">
+                    <tr key={m.model_name} className={isChampion ? 'font-semibold text-ink bg-slate-50/70' : 'text-ink-secondary'}>
+                      <td className="py-3.5 px-3.5">
                         <span>{m.model_name}</span>
-                        {isChampion && <span className="text-[10px] text-risk-low uppercase ml-2 font-bold">(Champion)</span>}
+                        {isChampion && <span className="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded uppercase ml-2 font-bold">(Champion)</span>}
                       </td>
-                      <td className={`py-3 px-3 text-center ${isChampion ? 'text-risk-low font-bold' : ''}`}>
+                      <td className={`py-3.5 px-3.5 text-center font-numeric ${isChampion ? 'text-emerald-700 font-bold' : ''}`}>
                         {m.test_pr_auc.toFixed(4)}
                       </td>
-                      <td className="py-3 px-3 text-center font-bold text-ink">{m.test_roc_auc.toFixed(4)}</td>
-                      <td className="py-3 px-3 text-center">{(m.optimal_precision * 100).toFixed(1)}%</td>
-                      <td className="py-3 px-3 text-center">{(m.optimal_recall * 100).toFixed(1)}%</td>
-                      <td className="py-3 px-3 text-center font-bold text-ink">{m.optimal_f1.toFixed(4)}</td>
-                      <td className="py-3 px-3 text-right text-ink-muted">{m.fit_time_seconds}s</td>
+                      <td className="py-3.5 px-3.5 text-center font-bold text-ink font-numeric">{m.test_roc_auc.toFixed(4)}</td>
+                      <td className="py-3.5 px-3.5 text-center font-numeric">{(m.optimal_precision * 100).toFixed(1)}%</td>
+                      <td className="py-3.5 px-3.5 text-center font-numeric">{(m.optimal_recall * 100).toFixed(1)}%</td>
+                      <td className="py-3.5 px-3.5 text-center font-bold text-ink font-numeric">{m.optimal_f1.toFixed(4)}</td>
+                      <td className="py-3.5 px-3.5 text-right text-ink-muted font-numeric">{m.fit_time_seconds}s</td>
                     </tr>
                   );
                 })}
@@ -214,53 +212,56 @@ export const ModelIntelligence: React.FC = () => {
         </div>
       )}
 
-      {/* 4. Two Columns: Threshold Optimization Curve & Feature Importance */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-2">
-        {/* Left: Threshold Optimizer */}
-        <div className="lg:col-span-7 space-y-3 bg-surface border border-surface-border p-4">
-          <div className="flex justify-between items-baseline">
+      {/* 5. Two Columns: Threshold Optimization Curve & Feature Importance */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Left: Threshold Optimizer (7 cols) */}
+        <div className="lg:col-span-7 bg-white border border-surface-border rounded-lg shadow-subtle p-5 space-y-3">
+          <div className="flex items-center justify-between border-b border-surface-border pb-3">
             <div>
-              <h2 className="text-xs font-mono uppercase tracking-widest text-ink font-semibold">
-                Decision threshold optimization curve
+              <h2 className="text-sm font-semibold text-ink">
+                Decision Threshold Optimization Curve
               </h2>
-              <p className="text-[11px] font-sans text-ink-secondary pt-0.5">
+              <p className="text-xs text-ink-secondary">
                 Precision vs Recall operating trade-off on chronological validation split.
               </p>
             </div>
-            <span className="text-[11px] font-mono font-bold text-ink">Optimal: 0.757</span>
+            <span className="text-xs font-mono font-bold text-ink bg-slate-100 border border-slate-200 px-2.5 py-1 rounded">
+              Optimal Threshold: 0.757
+            </span>
           </div>
 
           <div className="h-60 w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={thresholdData?.sweep_table || []} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="2 2" stroke="#f0f0ed" vertical={false} />
-                <XAxis dataKey="threshold" stroke="#8e99a8" fontSize={10} fontStyle="JetBrains Mono" />
-                <YAxis stroke="#8e99a8" domain={[0, 1]} fontSize={10} fontStyle="JetBrains Mono" />
+                <CartesianGrid strokeDasharray="2 2" stroke="#f1f5f9" vertical={false} />
+                <XAxis dataKey="threshold" stroke="#94a3b8" fontSize={11} fontStyle="JetBrains Mono" />
+                <YAxis stroke="#94a3b8" domain={[0, 1]} fontSize={11} fontStyle="JetBrains Mono" />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: '#ffffff',
-                    borderColor: '#e6e6e2',
-                    fontSize: '11px',
+                    borderColor: '#e2e8f0',
+                    fontSize: '12px',
                     fontFamily: 'JetBrains Mono',
+                    borderRadius: '6px',
                   }}
                 />
                 <Legend wrapperStyle={{ fontSize: '11px', fontFamily: 'JetBrains Mono' }} />
-                <ReferenceLine x={0.757} stroke="#0f172a" strokeDasharray="2 2" strokeWidth={1.5} />
+                <ReferenceLine x={0.757} stroke="#0f172a" strokeDasharray="3 3" strokeWidth={1.5} />
                 <Line type="monotone" dataKey="precision" stroke="#16a34a" strokeWidth={1.5} dot={false} name="Precision" />
-                <Line type="monotone" dataKey="recall" stroke="#d97706" strokeWidth={1.5} dot={false} name="Recall" />
-                <Line type="monotone" dataKey="f1" stroke="#0f172a" strokeWidth={2} dot={false} name="F1 score" />
+                <Line type="monotone" dataKey="recall" stroke="#ea580c" strokeWidth={1.5} dot={false} name="Recall" />
+                <Line type="monotone" dataKey="f1" stroke="#0f172a" strokeWidth={2} dot={false} name="F1 Score" />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Right: Feature Contributions */}
-        <div className="lg:col-span-5 space-y-3 bg-surface border border-surface-border p-4">
-          <div>
-            <h2 className="text-xs font-mono uppercase tracking-widest text-ink font-semibold">
-              Top predictive feature importance
+        {/* Right: Feature Contributions (5 cols) */}
+        <div className="lg:col-span-5 bg-white border border-surface-border rounded-lg shadow-subtle p-5 space-y-3">
+          <div className="border-b border-surface-border pb-3">
+            <h2 className="text-sm font-semibold text-ink">
+              Top Predictive Feature Importance
             </h2>
-            <p className="text-[11px] font-sans text-ink-secondary pt-0.5">
+            <p className="text-xs text-ink-secondary">
               Relative gain attribution across 52 streaming features.
             </p>
           </div>
@@ -268,17 +269,17 @@ export const ModelIntelligence: React.FC = () => {
           <div className="space-y-3 font-mono text-xs max-h-60 overflow-y-auto pr-1">
             {featureImportance.map((item) => (
               <div key={item.feature} className="space-y-1">
-                <div className="flex justify-between items-center text-[11px]">
+                <div className="flex justify-between items-center text-xs">
                   <span className="text-ink font-medium">{item.feature}</span>
-                  <span className="font-bold text-ink">{(item.importance * 100).toFixed(1)}%</span>
+                  <span className="font-bold text-ink font-numeric">{(item.importance * 100).toFixed(1)}%</span>
                 </div>
-                <div className="h-1 w-full bg-neutral-100 overflow-hidden">
+                <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-ink"
+                    className="h-full bg-slate-900 rounded-full"
                     style={{ width: `${item.importance * 350}%` }}
                   />
                 </div>
-                <p className="text-[10px] text-ink-muted font-sans leading-tight">
+                <p className="text-[11px] text-ink-muted font-sans leading-tight">
                   {item.desc}
                 </p>
               </div>
