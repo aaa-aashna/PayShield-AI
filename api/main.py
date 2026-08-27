@@ -490,35 +490,79 @@ def get_risk_summary():
     if total == 0:
         return {
             "total_processed": 0,
+            "total_amount": 0.0,
+            "avg_risk_score": 0.0,
             "low_risk": 0,
             "medium_risk": 0,
             "high_risk": 0,
             "critical_risk": 0,
             "blocked_count": 0,
             "under_review_count": 0,
+            "approved_count": 0,
+            "risk_distribution": {"LOW": 0, "MEDIUM": 0, "HIGH": 0, "CRITICAL": 0},
+            "timeline": [],
             "recent_feed": [],
         }
 
     counts = {"LOW": 0, "MEDIUM": 0, "HIGH": 0, "CRITICAL": 0}
     blocked = 0
     review = 0
+    approved = 0
+    total_amt = 0.0
+    total_risk = 0.0
 
     for tx in recent:
         lvl = tx.get("risk_level", "LOW")
         counts[lvl] = counts.get(lvl, 0) + 1
-        if tx.get("decision") == "BLOCK":
+        dec = tx.get("decision")
+        if dec == "BLOCK":
             blocked += 1
-        elif tx.get("decision") in ["REVIEW", "CHALLENGE"]:
+        elif dec in ["REVIEW", "CHALLENGE"]:
             review += 1
+        elif dec in ["APPROVE", "APPROVED"]:
+            approved += 1
+        total_amt += float(tx.get("tx_amount", 0.0))
+        total_risk += float(tx.get("risk_score", 0.0))
+
+    avg_risk = round(total_risk / total, 1) if total > 0 else 0.0
+
+    timeline = []
+    # Build chronological timeline from actual transactions in state
+    for tx in reversed(recent[-25:]):
+        dt_str = tx.get("tx_datetime", "")
+        formatted_time = dt_str
+        try:
+            if "T" in dt_str:
+                formatted_time = datetime.fromisoformat(dt_str).strftime("%H:%M:%S")
+            elif " " in dt_str:
+                formatted_time = dt_str.split(" ")[-1]
+        except Exception:
+            formatted_time = dt_str[-8:]
+
+        timeline.append({
+            "transaction_id": tx.get("transaction_id"),
+            "time": dt_str,
+            "formatted_time": formatted_time,
+            "risk_score": tx.get("risk_score", 0.0),
+            "fraud_probability": round(tx.get("fraud_probability", 0.0) * 100, 1),
+            "amount": tx.get("tx_amount", 0.0),
+            "risk_level": tx.get("risk_level", "LOW"),
+            "decision": tx.get("decision", "APPROVE"),
+        })
 
     return {
         "total_processed": total,
+        "total_amount": round(total_amt, 2),
+        "avg_risk_score": avg_risk,
         "low_risk": counts["LOW"],
         "medium_risk": counts["MEDIUM"],
         "high_risk": counts["HIGH"],
         "critical_risk": counts["CRITICAL"],
         "blocked_count": blocked,
         "under_review_count": review,
+        "approved_count": approved,
+        "risk_distribution": counts,
+        "timeline": timeline,
         "recent_feed": recent[:25],
     }
 

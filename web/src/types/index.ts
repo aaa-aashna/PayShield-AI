@@ -46,6 +46,38 @@ export interface AlertRecord {
   primary_reason: string;
 }
 
+export interface TimelinePoint {
+  transaction_id: string;
+  time: string;
+  formatted_time: string;
+  risk_score: number;
+  fraud_probability: number;
+  amount: number;
+  risk_level: RiskLevel;
+  decision: DecisionAction;
+}
+
+export interface RiskSummaryData {
+  total_processed: number;
+  total_amount: number;
+  avg_risk_score: number;
+  low_risk: number;
+  medium_risk: number;
+  high_risk: number;
+  critical_risk: number;
+  blocked_count: number;
+  under_review_count: number;
+  approved_count: number;
+  risk_distribution: {
+    LOW: number;
+    MEDIUM: number;
+    HIGH: number;
+    CRITICAL: number;
+  };
+  timeline: TimelinePoint[];
+  recent_feed: TransactionRecord[];
+}
+
 export interface GraphNode {
   id: string;
   label: string;

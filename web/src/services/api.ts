@@ -242,6 +242,77 @@ export const api = {
     };
   },
 
+  async getRiskSummary(): Promise<import('../types').RiskSummaryData> {
+    try {
+      const res = await fetch(`${API_BASE}/risk-summary`);
+      if (res.ok) return await res.json();
+    } catch {
+      // Fallback: derive dynamic summary directly from active transaction records
+    }
+
+    const txs = VERIFIED_TRANSACTIONS;
+    const total = txs.length;
+    const counts = { LOW: 0, MEDIUM: 0, HIGH: 0, CRITICAL: 0 };
+    let blocked = 0;
+    let review = 0;
+    let approved = 0;
+    let totalAmt = 0;
+    let totalRisk = 0;
+
+    for (const t of txs) {
+      const lvl = t.risk_level || 'LOW';
+      if (counts[lvl] !== undefined) counts[lvl]++;
+      if (t.decision === 'BLOCK') blocked++;
+      else if (t.decision === 'CHALLENGE' || t.decision === 'REVIEW') review++;
+      else approved++;
+      totalAmt += t.tx_amount || 0;
+      totalRisk += t.risk_score || 0;
+    }
+
+    const timeline = txs
+      .slice(0, 25)
+      .reverse()
+      .map((t) => {
+        const dtStr = t.tx_datetime || '';
+        let formattedTime = dtStr;
+        try {
+          if (dtStr.includes('T')) {
+            formattedTime = new Date(dtStr).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          } else if (dtStr.includes(' ')) {
+            formattedTime = dtStr.split(' ')[1] || dtStr;
+          }
+        } catch {
+          formattedTime = dtStr.slice(-8);
+        }
+        return {
+          transaction_id: t.transaction_id,
+          time: dtStr,
+          formatted_time: formattedTime,
+          risk_score: t.risk_score,
+          fraud_probability: roundTo(t.fraud_probability * 100, 1),
+          amount: t.tx_amount,
+          risk_level: t.risk_level,
+          decision: t.decision,
+        };
+      });
+
+    return {
+      total_processed: total,
+      total_amount: roundTo(totalAmt, 2),
+      avg_risk_score: total > 0 ? roundTo(totalRisk / total, 1) : 0,
+      low_risk: counts.LOW,
+      medium_risk: counts.MEDIUM,
+      high_risk: counts.HIGH,
+      critical_risk: counts.CRITICAL,
+      blocked_count: blocked,
+      under_review_count: review,
+      approved_count: approved,
+      risk_distribution: counts,
+      timeline: timeline,
+      recent_feed: txs.slice(0, 25),
+    };
+  },
+
   async getDrift(): Promise<DriftData> {
     try {
       const res = await fetch(`${API_BASE}/drift`);

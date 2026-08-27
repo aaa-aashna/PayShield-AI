@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   LineChart,
@@ -10,20 +10,22 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from 'recharts';
-import { ArrowRight, CheckCircle2, AlertTriangle, ShieldAlert, Zap, Filter, Search, Play } from 'lucide-react';
+import { ArrowRight, Play, RefreshCw, AlertTriangle, ShieldCheck, ShieldAlert } from 'lucide-react';
 import { RiskBadge } from '../components/common/RiskBadge';
 import { LoadingState } from '../components/common/LoadingState';
 import { EmptyState } from '../components/common/EmptyState';
 import { api } from '../services/api';
-import { TransactionRecord, AlertRecord } from '../types';
+import { TransactionRecord, AlertRecord, RiskSummaryData } from '../types';
 
 export const CommandCenter: React.FC = () => {
   const navigate = useNavigate();
+  const [summary, setSummary] = useState<RiskSummaryData | null>(null);
   const [transactions, setTransactions] = useState<TransactionRecord[]>([]);
   const [alerts, setAlerts] = useState<AlertRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // Quick transaction sandbox state
+  // Transaction Sandbox State
   const [customerId, setCustomerId] = useState('1376');
   const [terminalId, setTerminalId] = useState('8023');
   const [amount, setAmount] = useState('167.40');
@@ -37,25 +39,34 @@ export const CommandCenter: React.FC = () => {
     { label: 'Terminal Hopping ($195.00)', cust: '1042', term: '5081', amt: '195.00' },
   ];
 
-  const loadData = async () => {
-    setLoading(true);
+  const loadData = useCallback(async (silent = false) => {
+    if (!silent) setLoading(true);
+    else setIsRefreshing(true);
     try {
-      const [txs, alts] = await Promise.all([
+      const [sum, txs, alts] = await Promise.all([
+        api.getRiskSummary(),
         api.getTransactions(35),
         api.getAlerts(15),
       ]);
+      setSummary(sum);
       setTransactions(txs);
       setAlerts(alts);
     } catch (e) {
-      console.error('Failed to load verified data:', e);
+      console.error('Failed to fetch live dashboard telemetry:', e);
     } finally {
       setLoading(false);
+      setIsRefreshing(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadData();
-  }, []);
+    // Live polling interval for continuous stream telemetry
+    const interval = setInterval(() => {
+      loadData(true);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [loadData]);
 
   const handleQuickScore = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -67,26 +78,14 @@ export const CommandCenter: React.FC = () => {
         customer_id: customerId,
         terminal_id: terminalId,
         tx_amount: amt,
+        tx_datetime: new Date().toISOString(),
       });
       setLastScoredTx(res);
-      setTransactions((prev) => [res, ...prev]);
-      if (res.risk_level === 'CRITICAL' || res.risk_level === 'HIGH') {
-        const newAlt: AlertRecord = {
-          id: `ALT_${res.transaction_id}`,
-          transaction_id: res.transaction_id,
-          customer_id: res.customer_id,
-          terminal_id: res.terminal_id,
-          amount: res.tx_amount,
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          severity: res.risk_level,
-          type: res.reasons[0] || 'Multi-signal threshold breach',
-          risk_score: res.risk_score,
-          decision: res.decision,
-          status: 'NEW',
-          primary_reason: res.reasons[0] || 'Anomalous deviation detected',
-        };
-        setAlerts((prev) => [newAlt, ...prev]);
-      }
+
+      // Immediately refresh live dashboard data from the backend/data layer
+      await loadData(true);
+    } catch (err) {
+      console.error('Scoring error:', err);
     } finally {
       setIsProcessing(false);
     }
@@ -98,86 +97,115 @@ export const CommandCenter: React.FC = () => {
     setAmount(preset.amt);
   };
 
-  const timelineData = transactions
-    .slice(0, 18)
-    .reverse()
-    .map((tx, idx) => ({
-      time: tx.tx_datetime ? new Date(tx.tx_datetime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : `T-${idx}`,
-      risk_score: tx.risk_score,
-      amount: tx.tx_amount,
-      fraud_prob: tx.fraud_probability * 100,
-    }));
+  // Dynamically derived chart data directly from actual transaction records
+  const timelineData = summary?.timeline && summary.timeline.length > 0
+    ? summary.timeline
+    : transactions.slice(0, 20).reverse().map((tx) => ({
+        transaction_id: tx.transaction_id,
+        time: tx.tx_datetime,
+        formatted_time: tx.tx_datetime ? new Date(tx.tx_datetime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : 'T-0',
+        risk_score: tx.risk_score,
+        fraud_probability: Number((tx.fraud_probability * 100).toFixed(1)),
+        amount: tx.tx_amount,
+        risk_level: tx.risk_level,
+        decision: tx.decision,
+      }));
 
-  const criticalCount = alerts.filter((a) => a.severity === 'CRITICAL').length;
-  const highCount = alerts.filter((a) => a.severity === 'HIGH').length;
+  const totalAnalyzed = summary?.total_processed ?? transactions.length;
+  const criticalCount = summary?.critical_risk ?? alerts.filter((a) => a.severity === 'CRITICAL').length;
+  const highCount = summary?.high_risk ?? alerts.filter((a) => a.severity === 'HIGH').length;
+  const totalAmountAnalyzed = summary?.total_amount ?? transactions.reduce((acc, t) => acc + (t.tx_amount || 0), 0);
+  const avgRiskScore = summary?.avg_risk_score ?? (transactions.length > 0 ? Number((transactions.reduce((acc, t) => acc + (t.risk_score || 0), 0) / transactions.length).toFixed(1)) : 0);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
-      {/* 1. Header & Operational Context */}
+      {/* 1. Header & Operational Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-surface-border">
         <div>
           <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-ink">
             Payment Operations & Risk Console
           </h1>
           <p className="text-sm text-ink-secondary mt-1">
-            Real-time streaming authorization monitor · Multi-tier behavioral & graph anomaly detection.
+            Real-time streaming authorization monitor · Live metrics derived directly from model scoring buffer.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
+          <button
+            onClick={() => loadData(true)}
+            disabled={isRefreshing}
+            className="flex items-center gap-1.5 text-xs font-mono text-ink-secondary hover:text-ink bg-white border border-surface-border px-3 py-1.5 rounded-md shadow-subtle transition"
+            title="Poll live updates"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <span>{isRefreshing ? 'Syncing...' : 'Sync Live'}</span>
+          </button>
+
           <div className="flex items-center gap-2 text-xs font-mono text-ink-secondary bg-white border border-surface-border px-3 py-1.5 rounded-md shadow-subtle">
             <span className="w-2 h-2 rounded-full bg-risk-low animate-pulse" />
-            <span>Active Model: <b className="text-ink font-semibold">HistGB Champion</b> (Threshold 0.757)</span>
+            <span>Engine: <b className="text-ink font-semibold">HistGB Champion</b></span>
           </div>
         </div>
       </div>
 
-      {/* 2. Structured Operational KPI Strip */}
+      {/* 2. Dynamically Derived Operational KPI Strip */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white border border-surface-border p-4 rounded-lg shadow-subtle space-y-1">
-          <div className="text-[11px] font-mono uppercase tracking-wider text-ink-muted">Monitored Volume</div>
-          <div className="text-2xl font-bold text-ink font-numeric">1,754,155 <span className="text-xs font-normal text-ink-muted">Txs</span></div>
-          <div className="text-xs text-ink-secondary">6-Month continuous card stream</div>
+          <div className="text-[11px] font-mono uppercase tracking-wider text-ink-muted">Analyzed Volume</div>
+          <div className="text-2xl font-bold text-ink font-numeric">
+            {loading ? '—' : totalAnalyzed.toLocaleString()} <span className="text-xs font-normal text-ink-muted">Txs</span>
+          </div>
+          <div className="text-xs text-ink-secondary font-numeric">
+            ${totalAmountAnalyzed.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} total volume
+          </div>
         </div>
 
         <div className="bg-white border border-surface-border p-4 rounded-lg shadow-subtle space-y-1">
           <div className="text-[11px] font-mono uppercase tracking-wider text-ink-muted">Critical Threats Intercepted</div>
-          <div className="text-2xl font-bold text-risk-critical font-numeric">{loading ? '—' : criticalCount} <span className="text-xs font-normal text-ink-muted">Blocked</span></div>
-          <div className="text-xs text-ink-secondary">100% automated hard block execution</div>
+          <div className="text-2xl font-bold text-risk-critical font-numeric">
+            {loading ? '—' : criticalCount} <span className="text-xs font-normal text-ink-muted">Blocked</span>
+          </div>
+          <div className="text-xs text-ink-secondary">Autonomous hard block policy</div>
         </div>
 
         <div className="bg-white border border-surface-border p-4 rounded-lg shadow-subtle space-y-1">
           <div className="text-[11px] font-mono uppercase tracking-wider text-ink-muted">Verification Challenges</div>
-          <div className="text-2xl font-bold text-risk-high font-numeric">{loading ? '—' : highCount} <span className="text-xs font-normal text-ink-muted">Challenged</span></div>
+          <div className="text-2xl font-bold text-risk-high font-numeric">
+            {loading ? '—' : highCount} <span className="text-xs font-normal text-ink-muted">Challenged</span>
+          </div>
           <div className="text-xs text-ink-secondary">Step-up 2FA on suspicious deviations</div>
         </div>
 
         <div className="bg-white border border-surface-border p-4 rounded-lg shadow-subtle space-y-1">
-          <div className="text-[11px] font-mono uppercase tracking-wider text-ink-muted">Population Stability (PSI)</div>
-          <div className="text-2xl font-bold text-risk-low font-numeric">0.0241</div>
-          <div className="text-xs text-risk-low font-medium">STABLE · Zero feature drift (&lt; 0.10)</div>
+          <div className="text-[11px] font-mono uppercase tracking-wider text-ink-muted">Average Risk Score</div>
+          <div className="text-2xl font-bold text-ink font-numeric">
+            {loading ? '—' : avgRiskScore} <span className="text-xs font-normal text-ink-muted">/ 100</span>
+          </div>
+          <div className="text-xs text-ink-secondary">
+            {summary?.risk_distribution ? `${summary.risk_distribution.LOW} Low · ${summary.risk_distribution.MEDIUM} Med · ${summary.risk_distribution.HIGH} High` : 'Across live evaluations'}
+          </div>
         </div>
       </div>
 
-      {/* 3. Main Dashboard Grid: 8 Cols (Telemetry & Stream) + 4 Cols (Triage & Sandbox) */}
+      {/* 3. Main Operational Workspace (8 Cols Left / 4 Cols Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* LEFT COLUMN: 8 Cols */}
+        {/* LEFT COLUMN: 8 Cols (Live Graph & Transactions Stream) */}
         <div className="lg:col-span-8 space-y-8">
-          {/* A. Live Risk Score Velocity Chart */}
+          {/* A. Live Risk Score Velocity Graph */}
           <div className="bg-white border border-surface-border rounded-lg shadow-subtle p-5 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-surface-border pb-3">
               <div>
                 <h2 className="text-sm font-semibold text-ink">
-                  Live Risk Score Velocity
+                  Dynamic Risk Score Velocity (Live Stream)
                 </h2>
                 <p className="text-xs text-ink-secondary">
-                  Continuous multi-signal risk evaluations across recent authorization events.
+                  Real-time progression curve generated dynamically from analyzed transaction timestamps.
                 </p>
               </div>
 
               <div className="flex items-center gap-4 text-xs font-mono text-ink-muted">
                 <span className="inline-flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-slate-900" /> Risk score (0–100)
+                  <span className="w-2.5 h-2.5 rounded-full bg-slate-900" /> Risk score
                 </span>
                 <span className="inline-flex items-center gap-1.5 text-red-600 font-medium">
                   <span className="w-3 h-0.5 bg-red-600" /> Block threshold (80.0)
@@ -185,13 +213,27 @@ export const CommandCenter: React.FC = () => {
               </div>
             </div>
 
-            <div className="h-56 w-full pt-2">
-              {timelineData.length > 0 ? (
+            <div className="h-60 w-full pt-2">
+              {loading ? (
+                <LoadingState message="Loading live risk stream telemetry..." className="py-20" />
+              ) : timelineData.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={timelineData} margin={{ top: 10, right: 15, left: -20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="2 2" stroke="#f1f5f9" vertical={false} />
-                    <XAxis dataKey="time" stroke="#94a3b8" fontSize={11} fontStyle="JetBrains Mono" />
-                    <YAxis stroke="#94a3b8" domain={[0, 100]} fontSize={11} fontStyle="JetBrains Mono" />
+                    <XAxis
+                      dataKey="formatted_time"
+                      stroke="#94a3b8"
+                      fontSize={10}
+                      fontFamily="JetBrains Mono"
+                      tickLine={false}
+                    />
+                    <YAxis
+                      stroke="#94a3b8"
+                      domain={[0, 100]}
+                      fontSize={11}
+                      fontFamily="JetBrains Mono"
+                      tickLine={false}
+                    />
                     <Tooltip
                       contentStyle={{
                         backgroundColor: '#ffffff',
@@ -200,6 +242,16 @@ export const CommandCenter: React.FC = () => {
                         fontFamily: 'JetBrains Mono',
                         borderRadius: '6px',
                         boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                      }}
+                      formatter={(value: any, name: string) => [
+                        name === 'risk_score' ? `${Number(value).toFixed(1)} / 100` : value,
+                        name === 'risk_score' ? 'Risk Score' : name,
+                      ]}
+                      labelFormatter={(label, payload) => {
+                        if (payload && payload[0]?.payload?.transaction_id) {
+                          return `${payload[0].payload.transaction_id} (${label})`;
+                        }
+                        return label;
                       }}
                     />
                     <ReferenceLine y={80} stroke="#dc2626" strokeDasharray="3 3" strokeWidth={1.5} />
@@ -210,24 +262,31 @@ export const CommandCenter: React.FC = () => {
                       strokeWidth={2}
                       dot={{ r: 3, fill: '#0f172a' }}
                       activeDot={{ r: 5 }}
+                      isAnimationActive={false}
                     />
                   </LineChart>
                 </ResponsiveContainer>
               ) : (
-                <LoadingState message="Loading risk velocity telemetry..." className="py-16" />
+                <EmptyState
+                  title="No Transactions Analyzed Yet"
+                  description="Submit a transaction in the sandbox to generate live risk velocity telemetry."
+                  actionLabel="Score Sample Transaction"
+                  onAction={() => handleQuickScore()}
+                  className="py-12"
+                />
               )}
             </div>
           </div>
 
-          {/* B. Real-Time Transaction Stream */}
+          {/* B. Live Transaction Stream Table */}
           <div className="bg-white border border-surface-border rounded-lg shadow-subtle overflow-hidden">
             <div className="p-4 border-b border-surface-border flex items-center justify-between">
               <div>
                 <h2 className="text-sm font-semibold text-ink">
-                  Recent Stream Transactions
+                  Recent Analyzed Stream Transactions
                 </h2>
                 <p className="text-xs text-ink-secondary">
-                  Real-time payment transactions evaluated against customer 30-day baseline.
+                  Live authorization records scored through the active feature and fusion pipeline.
                 </p>
               </div>
 
@@ -235,61 +294,73 @@ export const CommandCenter: React.FC = () => {
                 onClick={() => navigate('/transactions')}
                 className="text-xs font-medium text-brand hover:text-brand-hover flex items-center gap-1 font-sans"
               >
-                <span>View all transactions</span>
+                <span>View all ({totalAnalyzed})</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs font-mono">
-                <thead className="text-[11px] uppercase tracking-wider text-ink-muted bg-slate-50 border-b border-surface-border">
-                  <tr>
-                    <th className="py-2.5 px-3.5">Transaction ID</th>
-                    <th className="py-2.5 px-3.5">Customer</th>
-                    <th className="py-2.5 px-3.5">Terminal</th>
-                    <th className="py-2.5 px-3.5 text-right">Amount</th>
-                    <th className="py-2.5 px-3.5 text-center">Fraud Prob</th>
-                    <th className="py-2.5 px-3.5">Risk Level</th>
-                    <th className="py-2.5 px-3.5">Decision</th>
-                    <th className="py-2.5 px-3.5 text-right">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-surface-border text-xs">
-                  {transactions.slice(0, 8).map((tx) => (
-                    <tr
-                      key={tx.transaction_id}
-                      onClick={() => navigate(`/transactions/${tx.transaction_id}`)}
-                      className="hover:bg-slate-50 transition cursor-pointer"
-                    >
-                      <td className="py-3 px-3.5 font-semibold text-ink">{tx.transaction_id}</td>
-                      <td className="py-3 px-3.5 text-ink-secondary">{tx.customer_id}</td>
-                      <td className="py-3 px-3.5 text-ink-muted">{tx.terminal_id}</td>
-                      <td className="py-3 px-3.5 text-right font-bold text-ink font-numeric">
-                        ${tx.tx_amount.toFixed(2)}
-                      </td>
-                      <td className="py-3 px-3.5 text-center text-ink-secondary font-numeric">
-                        {(tx.fraud_probability * 100).toFixed(1)}%
-                      </td>
-                      <td className="py-3 px-3.5">
-                        <RiskBadge level={tx.risk_level} score={tx.risk_score} size="sm" />
-                      </td>
-                      <td className="py-3 px-3.5">
-                        <RiskBadge decision={tx.decision} size="sm" />
-                      </td>
-                      <td className="py-3 px-3.5 text-right">
-                        <span className="text-brand hover:underline font-sans font-medium">Inspect →</span>
-                      </td>
+              {loading ? (
+                <LoadingState message="Loading payment transactions..." className="py-16" />
+              ) : transactions.length > 0 ? (
+                <table className="w-full text-left text-xs font-mono">
+                  <thead className="text-[11px] uppercase tracking-wider text-ink-muted bg-slate-50 border-b border-surface-border">
+                    <tr>
+                      <th className="py-2.5 px-3.5">Transaction ID</th>
+                      <th className="py-2.5 px-3.5">Customer</th>
+                      <th className="py-2.5 px-3.5">Terminal</th>
+                      <th className="py-2.5 px-3.5 text-right">Amount</th>
+                      <th className="py-2.5 px-3.5 text-center">Fraud Prob</th>
+                      <th className="py-2.5 px-3.5">Risk Level</th>
+                      <th className="py-2.5 px-3.5">Decision</th>
+                      <th className="py-2.5 px-3.5 text-right">Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-surface-border text-xs">
+                    {transactions.slice(0, 8).map((tx) => (
+                      <tr
+                        key={tx.transaction_id}
+                        onClick={() => navigate(`/transactions/${tx.transaction_id}`)}
+                        className="hover:bg-slate-50 transition cursor-pointer"
+                      >
+                        <td className="py-3 px-3.5 font-semibold text-ink">{tx.transaction_id}</td>
+                        <td className="py-3 px-3.5 text-ink-secondary">{tx.customer_id}</td>
+                        <td className="py-3 px-3.5 text-ink-muted">{tx.terminal_id}</td>
+                        <td className="py-3 px-3.5 text-right font-bold text-ink font-numeric">
+                          ${tx.tx_amount.toFixed(2)}
+                        </td>
+                        <td className="py-3 px-3.5 text-center text-ink-secondary font-numeric">
+                          {(tx.fraud_probability * 100).toFixed(1)}%
+                        </td>
+                        <td className="py-3 px-3.5">
+                          <RiskBadge level={tx.risk_level} score={tx.risk_score} size="sm" />
+                        </td>
+                        <td className="py-3 px-3.5">
+                          <RiskBadge decision={tx.decision} size="sm" />
+                        </td>
+                        <td className="py-3 px-3.5 text-right">
+                          <span className="text-brand hover:underline font-sans font-medium">Inspect →</span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <EmptyState
+                  title="No Transactions Found"
+                  description="No transactions have been processed yet."
+                  actionLabel="Score Sample Transaction"
+                  onAction={() => handleQuickScore()}
+                  className="py-12"
+                />
+              )}
             </div>
           </div>
         </div>
 
-        {/* RIGHT COLUMN: 4 Cols (Triage & Sandbox) */}
+        {/* RIGHT COLUMN: 4 Cols (Priority Alerts & Sandbox) */}
         <div className="lg:col-span-4 space-y-8">
-          {/* A. Priority Incident Queue */}
+          {/* A. Priority Incidents Queue */}
           <div className="bg-white border border-surface-border rounded-lg shadow-subtle p-4 space-y-3">
             <div className="flex items-center justify-between border-b border-surface-border pb-3">
               <div>
@@ -297,7 +368,7 @@ export const CommandCenter: React.FC = () => {
                   Priority Incidents
                 </h2>
                 <p className="text-xs text-ink-secondary">
-                  Flagged anomalies needing disposition.
+                  Flagged anomalies derived from model decisions.
                 </p>
               </div>
               <button
@@ -341,14 +412,14 @@ export const CommandCenter: React.FC = () => {
             </div>
           </div>
 
-          {/* B. Live Transaction Evaluation Sandbox */}
+          {/* B. Live Transaction Scoring Sandbox */}
           <div className="bg-white border border-surface-border rounded-lg shadow-subtle p-4 space-y-4">
             <div className="border-b border-surface-border pb-3">
               <h2 className="text-sm font-semibold text-ink">
                 Transaction Scoring Sandbox
               </h2>
               <p className="text-xs text-ink-secondary">
-                Simulate real-time scoring through the live risk fusion engine.
+                Submit an authorization to process through the live ML engine and immediately update dashboard charts.
               </p>
             </div>
 
