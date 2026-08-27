@@ -29,6 +29,15 @@ env/
 # Jupyter
 .ipynb_checkpoints/
 
+# Node / Frontend
+node_modules/
+web/node_modules/
+web/dist/
+.vite/
+web/.vite/
+.npm/
+scratch/
+
 # Data (keep structure, ignore contents)
 data/raw/*
 !data/raw/.gitkeep
