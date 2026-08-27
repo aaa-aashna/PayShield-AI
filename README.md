@@ -1,6 +1,18 @@
 # PayShield AI: Adaptive ML-Driven Payment Security & Fraud Intelligence Platform
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-GitHub_Pages-black?style=for-the-badge&logo=github)](https://aaa-aashna.github.io/PayShield-AI/)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
+
 > **PayShield AI** is an end-to-end, machine-learning-driven payment security platform that replaces static, easily-evaded fraud rules with **customer behavioral profiling**, **terminal intelligence**, **bipartite graph relationship analytics**, **unsupervised anomaly isolation**, **hybrid risk fusion**, and **closed-loop adversarial Red Team attack simulations**.
+
+---
+
+## 🌐 Live Hosted Application
+
+- **Live Web Console**: **[https://aaa-aashna.github.io/PayShield-AI/](https://aaa-aashna.github.io/PayShield-AI/)**
+- **GitHub Repository**: [https://github.com/aaa-aashna/PayShield-AI](https://github.com/aaa-aashna/PayShield-AI)
 
 ---
 
@@ -64,12 +76,12 @@ Traditional payment security architectures rely heavily on hardcoded heuristic r
                             ▼
           ┌─────────────────┴─────────────────┐
           ▼                                   ▼
-    REST API (FastAPI)           COMMAND CENTER UI (Streamlit)
-    - /predict & /score          - Overview & Live Alerts
-    - /explain                   - Transaction Forensics
-    - /simulate-attack           - Risk Graph Explorer
-    - /metrics & /drift          - Attack Lab (Red vs Blue)
-    - /risk-summary & /graph     - Model Intelligence & Drift
+    REST API (FastAPI)           EDITORIAL WEB CONSOLE (React + Vite)
+    - /predict & /score          - Security Overview & Risk Timeline
+    - /explain                   - Priority Investigations Triage
+    - /simulate-attack           - Transaction Details & Forensics
+    - /metrics & /drift          - Bipartite Entity Risk Graph
+    - /risk-summary & /graph     - Attack Lab (Red Team Sim)
 ```
 
 ---
@@ -98,7 +110,7 @@ Traditional payment security architectures rely heavily on hardcoded heuristic r
 
 ### E. Supervised Gradient Boosting (`blue_team.models.supervised`)
 - **Champion HistGradientBoosting Classifier**: Fast histogram-based gradient boosting optimized for imbalanced fraud data with balanced class weighting and calibrated decision probabilities.
-- Primary evaluation metric: **PR-AUC** (Precision-Recall Area Under Curve), Precision@K, and Recall@K.
+- Primary evaluation metric: **PR-AUC** (Precision-Recall Area Under Curve: **0.3526**, +257% vs baseline), Precision@K, and Recall@K.
 
 ### F. Hybrid Risk Fusion & Adaptive Escalation (`blue_team.risk_engine`)
 - **Deterministic Fusion Formula**:
@@ -112,10 +124,9 @@ Traditional payment security architectures rely heavily on hardcoded heuristic r
 
 ### G. Forensic Explainability (`blue_team.explainability`)
 - Converts complex mathematical features into human-readable causal explanations:
-  - *"BEHAVIORAL DEVIATION: Amount ($1,450.00) is 4.8x customer baseline of $302.10 (+3.8σ)."*
-  - *"HIGH VELOCITY: 6 transactions initiated within 11 minutes."*
-  - *"NEW RELATIONSHIP: Customer C_1042 has never transacted at Terminal T_5081 before."*
-  - *"GRAPH SIGNAL: Terminal is connected to historically flagged entities (Neighborhood Risk: 8.2%)."*
+  - *"Significant spending surge (+3.4x vs customer historical average)."*
+  - *"High fraud incidence rate on terminal 8023."*
+  - *"Elevated transaction frequency across 1-hour rolling window."*
 
 ---
 
@@ -147,42 +158,41 @@ Based on the real dataset of **1,754,155 payment transactions** (~0.84% fraud ra
 
 ### Prerequisites
 - Python 3.10+
+- Node.js 18+ (for local frontend development)
 - Windows PowerShell or Unix Terminal
 
 ### 1. Installation
 ```powershell
-# Clone and install dependencies
+# Clone repository
 git clone https://github.com/aaa-aashna/PayShield-AI.git
 cd PayShield-AI-1
+
+# Python backend setup
 pip install -e .
+
+# Frontend web setup
+cd web
+npm install
+cd ..
 ```
 
-### 2. Run Deterministic End-to-End Demo
+### 2. Run Automated Test Suite
 ```powershell
-python -m simulator.demo
+python -m pytest tests -v
 ```
 
-### 3. Run Benchmark Experiments & Generate Artifacts
-```powershell
-python -m experiments.run_experiments
-```
-
-### 4. Run Automated Test Suite
-```powershell
-pytest tests -v
-```
-
-### 5. Launch FastAPI Backend Service
+### 3. Launch FastAPI Backend Service
 ```powershell
 python -m uvicorn api.main:app --reload --port 8000
 ```
-- API Docs: `http://localhost:8000/docs`
+- API Docs (Swagger): `http://localhost:8000/docs`
 
-### 6. Launch Payment Security Command Center UI
+### 4. Launch React Frontend Console
 ```powershell
-python -m streamlit run web/app.py --server.port 8501
+cd web
+npm run dev
 ```
-- Command Center: `http://localhost:8501`
+- Web Application: `http://localhost:5173`
 
 ---
 
@@ -194,16 +204,10 @@ python -m streamlit run web/app.py --server.port 8501
 | `POST` | `/predict` | Full transaction scoring, risk fusion, and decisioning |
 | `POST` | `/explain` | Granular forensic feature attribution and reasons |
 | `POST` | `/simulate-attack` | Launch Red Team attack simulation and return defense trace |
-| `GET` | `/alerts` | Active high-risk and critical alerts |
+| `GET` | `/transactions` | Verified transactions scored through the ML pipeline |
+| `GET` | `/transactions/{id}` | Full forensic evaluation for a specific transaction |
+| `GET` | `/alerts` | Active high-risk and critical alerts queue |
 | `GET` | `/metrics` | Real model comparison benchmark and PR-AUC curves |
 | `GET` | `/risk-summary` | Overall risk distribution and transaction volume |
 | `GET` | `/drift` | Real feature and prediction PSI drift reports |
 | `GET` | `/graph/subgraph` | Interactive entity relationship subgraphs |
-
----
-
-## 8. Limitations & Future Work
-
-- **Graph Scale**: Current implementation uses NetworkX for in-memory bipartite graphs. Future iterations could integrate Neo4j or Graph Neural Networks (GNNs) for multi-million node graph embeddings.
-- **Card-Present Biometrics**: Integrating device telemetry (typing cadence, IP ASN risk) alongside payment transaction logs.
-- **Automated Feedback Loop**: Automated retraining triggers when PSI drift exceeds critical thresholds.
